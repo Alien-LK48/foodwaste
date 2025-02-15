@@ -1,0 +1,27 @@
+import React from 'react'
+
+export default function Introduction() {
+    return (
+        <div
+            className="p-[20px] bg-cover bg-center h-[480px] w-full flex flex-col justify-center items-center text-white text-center"
+            style={{ backgroundImage: 'url(/hero.png)' }}
+        >
+            <h1 className="text-6xl font-bold text-black animate-heading">
+                Our Mission
+            </h1>
+            <br />
+            <p className="mt-4 text-lg text-black">
+                At our core, we are committed to reducing food waste, alleviating hunger, and fostering sustainability. Every year, billions of pounds of edible food are discarded while millions of people go without. Our mission is to change that. We rescue surplus food from farms, grocery stores, restaurants, manufacturers, and even from individual households—preventing it from ending up in landfills and causing unnecessary greenhouse gas emissions. This food is then repurposed and redistributed to individuals and families in need, offering them access to fresh, healthy, and nutritious meals.
+                <br />
+
+                The journey of food waste reduction begins with partnerships. We collaborate with local businesses, farms, and organizations to gather surplus food, ensuring that it doesn’t go to waste. Our trained volunteers and staff members ensure the safe handling and distribution of this food, which is carefully sorted, packaged, and delivered to community centers, food banks, shelters, and directly to individuals facing food insecurity. This process not only helps reduce food waste but also strengthens local communities and supports vulnerable populations who may otherwise go hungry.
+                <br />
+            </p>
+
+            <br />
+            <button className="mt-6 bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg text-white font-semibold transition-all">
+                Join With Us
+            </button>
+        </div>
+    )
+}

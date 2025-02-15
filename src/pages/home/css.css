@@ -1,0 +1,29 @@
+/* styles.css */
+@keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .animate-scroll {
+    animation: scroll 50s linear infinite;
+  }
+  /* Custom animation for the text */
+@keyframes slideIn {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Applying the animation */
+.animate-heading {
+  animation: slideIn 1s ease-out forwards;
+}
