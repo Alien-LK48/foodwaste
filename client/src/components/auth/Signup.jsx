@@ -1,6 +1,8 @@
-import { useState } from "react";
+import React, { useContext, useState } from 'react'
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Appcontent } from "../contextapi/Appcontext";
 
 export default function SignUpForm() {
     const [formData, setFormData] = useState({
@@ -11,20 +13,34 @@ export default function SignUpForm() {
         phone: "",
         role: "user"
     });
+    const { setIsloggedin, getuserdata } = useContext(Appcontent)
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.role) {
-            setError("All fields are required!");
-            return;
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.role) {
+                setError("All fields are required!");
+                return;
+            }
+            setError("");
+            console.log(formData)
+            axios.defaults.withCredentials = true
+            const { data } = await axios.post('http://localhost:3000/api/auth/register', { email: formData.email, password: formData.password, name: formData.name, phone: formData.phone, role: formData.role })
+            if (data.success) {
+                setIsloggedin(true)
+                await getuserdata()
+                navigate('/login')
+            }
+            else {
+                setError(data.message)
+            }
+        } catch (error) {
+            setError(error.message)
         }
-        setError("");
-        console.log(formData)
     };
 
     return (

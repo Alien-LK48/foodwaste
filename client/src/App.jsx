@@ -7,6 +7,8 @@ import Donation from './pages/Donation'
 import Contact from './pages/contact/Contact'
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import SF from './pages/surplus-food/SF';
+import ForAdmin from './components/protectedroute/ForAdmin';
 function App() {
   return (
     <div>
@@ -18,6 +20,7 @@ function App() {
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/surplus-food' element={<ForAdmin><SF /></ForAdmin>} />
       </Routes>
     </div>
   )

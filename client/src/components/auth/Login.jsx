@@ -1,25 +1,46 @@
-import { useState } from "react";
+import React, { useContext, useState, useEffect } from 'react'
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Appcontent } from "../contextapi/Appcontext";
 export default function Login() {
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+    const { setIsloggedin, getuserdata, userdata } = useContext(Appcontent)
     const [error, setError] = useState("");
-
+    const navigate = useNavigate()
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!formData.name || !formData.email || !formData.password) {
-            setError("All fields are required!");
-            return;
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            if (!formData.email || !formData.password) {
+                setError("All fields are required!");
+                return;
+            }
+            setError("");
+
+            axios.defaults.withCredentials = true
+            const { data } = await axios.post('http://localhost:3000/api/auth/login', { email: formData.email, password: formData.password })
+            if (data.success) {
+                setIsloggedin(true)
+                await getuserdata()
+                navigate('/')
+            }
+            else {
+                setError(data.message)
+            }
+
+
+
+        } catch (error) {
+            setError(error.message)
         }
-        setError("");
-        alert("Sign Up Successful!");
+
     };
 
     return (
