@@ -8,7 +8,7 @@ export default function Prblm() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/earth.png"
+                            src="/earth.png"
                             alt="earth" />
                     </figure>
                     <div className="card-body">
@@ -22,7 +22,7 @@ export default function Prblm() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/money.png"
+                            src="/money.png"
                             alt="money" />
                     </figure>
                     <div className="card-body">
@@ -36,7 +36,7 @@ export default function Prblm() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/hunger.png"
+                            src="/hunger.png"
                             alt="hunger" />
                     </figure>
                     <div className="card-body">

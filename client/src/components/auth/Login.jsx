@@ -23,25 +23,33 @@ export default function Login() {
                 return;
             }
             setError("");
-
             axios.defaults.withCredentials = true
             const { data } = await axios.post('http://localhost:3000/api/auth/login', { email: formData.email, password: formData.password })
             if (data.success) {
                 setIsloggedin(true)
                 await getuserdata()
-                navigate('/')
             }
             else {
                 setError(data.message)
             }
-
-
-
         } catch (error) {
             setError(error.message)
         }
 
     };
+    useEffect(() => {
+        if (userdata?.user) {
+            if (userdata.user.isAdmin) {
+                navigate('/admin/admindashboard');
+            } else if (userdata.user.isNgo) {
+                navigate('/alldonatedfoods');
+            } else if (userdata.user.isDonor) {
+                navigate('/donation/newdonate');
+            } else {
+                navigate('/');
+            }
+        }
+    }, [userdata, navigate]); // Runs when userdata updates
 
     return (
         <motion.div

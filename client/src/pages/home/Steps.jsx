@@ -8,7 +8,7 @@ export default function Steps() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/Rescue.png"
+                            src="/Rescue.png"
                             alt="earth"
                             className='w-[380px] h-[300px]' />
                     </figure>
@@ -20,7 +20,7 @@ export default function Steps() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/Redistribute.png"
+                            src="/Redistribute.png"
                             alt="money"
                             className='w-[380px] h-[300px]' />
                     </figure>
@@ -32,7 +32,7 @@ export default function Steps() {
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <figure>
                         <img
-                            src="/public/Reduce.png"
+                            src="/Reduce.png"
                             alt="hunger"
                             className='w-[380px] h-[300px]'  />
                     </figure>

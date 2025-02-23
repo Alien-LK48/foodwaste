@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,33 +13,33 @@ export default function SignUpForm() {
         phone: "",
         role: "user"
     });
-    const { setIsloggedin, getuserdata } = useContext(Appcontent)
+    const { setIsloggedin, getuserdata } = useContext(Appcontent);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
     const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-            if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.role) {
+            if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone) {
                 setError("All fields are required!");
                 return;
             }
             setError("");
-            console.log(formData)
-            axios.defaults.withCredentials = true
-            const { data } = await axios.post('http://localhost:3000/api/auth/register', { email: formData.email, password: formData.password, name: formData.name, phone: formData.phone, role: formData.role })
+            axios.defaults.withCredentials = true;
+            const { data } = await axios.post("http://localhost:3000/api/auth/register", formData);
             if (data.success) {
-                setIsloggedin(true)
-                await getuserdata()
-                navigate('/login')
-            }
-            else {
-                setError(data.message)
+                setIsloggedin(true);
+                await getuserdata();
+                navigate("/");
+            } else {
+                setError(data.message);
             }
         } catch (error) {
-            setError(error.message)
+            setError(error.message);
         }
     };
 
@@ -48,106 +48,63 @@ export default function SignUpForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex justify-center items-center p-4 mt-[-20px]"
+            className="flex justify-center items-center min-h-screen bg-gray-300 p-6"
         >
-            <motion.form
-                onSubmit={handleSubmit}
-                className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl border-t-4 border-blue-600"
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.3 }}
-            >
-                <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">Create an Account</h2>
-                {error && (
-                    <motion.p
-                        className="text-red-500 text-sm text-center mb-3 font-semibold"
-                        initial={{ x: -10 }}
-                        animate={{ x: 10 }}
-                        transition={{ yoyo: Infinity, duration: 0.2 }}
-                    >
-                        {error}
-                    </motion.p>
-                )}
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-gray-600 font-semibold">Full Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-600 font-semibold">Address</label>
-                        <input
-                            type="text"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-600 font-semibold">Email Address</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-600 font-semibold">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-600 font-semibold">Phone Number</label>
-                        <input
-                            type="text"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
+            <div className="bg-white shadow-lg rounded-2xl overflow-hidden w-[1050px] flex flex-col md:flex-row">
+                <div className="hidden md:block w-1/2">
+                    <img src="/public/user.jpg" alt="Signup" className="w-[500px] h-full object-cover" />
+                </div>
+                <div className="w-full md:w-1/2 p-8">
+                    <h2 className="text-3xl font-bold text-gray-800 text-center">Create an Account</h2> <br />
+                    <div className='flex flex-col justify-center items-center'>
                         <label className="block text-gray-600 font-semibold">Register as</label>
                         <div className="flex space-x-4">
-                            {['user', 'donor', 'ngo'].map((role) => (
-                                <label key={role} className="flex items-center space-x-1 px-4 py-2 rounded-full cursor-pointer hover:bg-blue-200">
-                                    <input
-                                        type="radio"
-                                        name="role"
-                                        value={role}
-                                        checked={formData.role === role}
-                                        onChange={handleChange}
-                                        className="hidden"
-                                    />
-                                    <span className={`w-4 h-4 inline-block border-2 border-blue-500 rounded-full ${formData.role === role ? 'bg-blue-500' : 'bg-white'}`}></span>
-                                    <span className="text-gray-800 font-medium">{role}</span>
-                                </label>
-                            ))}
+                            <input type="radio" name="" id="" defaultChecked />
+                            <p>user</p>
+                            <input type="radio" name="" id="" onClick={() => { navigate('/donorsignup') }} />
+                            <p>donor</p>
+                            <input type="radio" name="" id="" onClick={() => { navigate('/ngosignup') }} />
+                            <p>ngo</p>
                         </div>
-                    </div>
-                </div><br />
-                <p>Already have an account ?  <Link to='/login' className="text-[red]">Login</Link></p>
-                <button
-                    type="submit"
-                    className="w-full mt-6 bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
-                >
-                    Sign Up
-                </button>
-
-            </motion.form>
+                    </div> <br />
+                    {error && (
+                        <motion.p className="text-red-500 text-center mt-2" animate={{ x: [0, -10, 10, 0] }}>
+                            {error}
+                        </motion.p>
+                    )}
+                    <motion.form
+                        onSubmit={handleSubmit}
+                        className="mt-6 space-y-4"
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.3 }}>
+                        <div>
+                            <label className="block text-gray-600 font-semibold">Full Name</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <div>
+                            <label className="block text-gray-600 font-semibold">Email</label>
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <div className="flex space-x-4">
+                            <div className="w-1/2">
+                                <label className="block text-gray-600 font-semibold">Password</label>
+                                <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+                            </div>
+                            <div className="w-1/2">
+                                <label className="block text-gray-600 font-semibold">Phone Number</label>
+                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-gray-600 font-semibold">Address</label>
+                            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Sign Up</button>
+                        <p className="text-center">Already have an account? <Link to="/login" className="text-blue-600">Login</Link></p>
+                    </motion.form>
+                </div>
+            </div>
         </motion.div>
     );
 }

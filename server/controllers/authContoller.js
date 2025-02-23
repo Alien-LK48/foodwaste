@@ -4,28 +4,17 @@ import usermodel from '../models/usermodel.js'
 import transporter from '../config/nodeMailer.js'
 import { format } from 'date-fns';
 export const register = async (req, res) => {
-    const { name, email, password, phone, role } = req.body;
+    const { name, email, password, phone, role, roletype, teamMember, ngoRegNum, area } = req.body;
     console.log("Received Data:", { name, email, password, phone, role });
-    if (!name || !email || !password || !phone || !role) {
-        return res.json({
-            success: false,
-            message: `missing details`
-        });
-    }
-
     try {
         const existinguser = await usermodel.findOne({ email });
-
         if (existinguser) {
             return res.json({
                 success: false,
                 message: `user already exists`
             });
         }
-
         const hashedpassword = await bcrypt.hash(password, 10);
-
-        // Declare user before condition
         let user;
         if (role === "user") {
             user = new usermodel({
@@ -47,7 +36,11 @@ export const register = async (req, res) => {
                 isUser: false,
                 isAdmin: false,
                 isNgo: true,
-                isDonor: false
+                isDonor: false,
+                ngoRegNum,
+                area,
+                teamMember,
+                roletype
             });
         }
         else if (role === "donor") {
@@ -59,7 +52,8 @@ export const register = async (req, res) => {
                 isUser: false,
                 isAdmin: false,
                 isNgo: false,
-                isDonor: true
+                isDonor: true,
+                roletype
             });
         }
         else {
@@ -68,9 +62,7 @@ export const register = async (req, res) => {
                 message: `invalid role ${role}`
             });
         }
-
-        await user.save();  // Now user is properly defined
-
+        await user.save();
         const token = jwt.sign(
             { id: user._id },
             process.env.JWT_SECRET_KEY,
