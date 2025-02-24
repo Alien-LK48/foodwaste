@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import axios from 'axios'
 import { CgProfile } from "react-icons/cg";
 import { FaSignInAlt } from 'react-icons/fa';
+import { MdDomainVerification } from "react-icons/md";
 export default function ProfileButton() {
     const { isloggedin, setIsloggedin, setUserdata, userdata } = useContext(Appcontent)
     const navigate = useNavigate()
@@ -17,6 +18,18 @@ export default function ProfileButton() {
             navigate('/login')
         } catch (error) {
             console.log(error.message)
+        }
+    }
+    const otp = async () => {
+        try {
+            axios.defaults.withCredentials = true
+            const { data } = await axios.post('http://localhost:3000/api/auth/send-verify-otp')
+            if (data.success) {
+                alert(`otp sent to your email`)
+                navigate('/otp')
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
     return (
@@ -32,11 +45,16 @@ export default function ProfileButton() {
                             Porfile
                         </label>
                     </li>
-                    <li>
+                    <li className='mb-[5px]'>
                         <a className="flex items-center bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors">
-                            <FaSignInAlt className="mr-2" />
+                            <FaSignInAlt />
                             {isloggedin ? (<p onClick={logout}>Logout</p>) : (<Link to='/login'><span>Login</span></Link>)}
                         </a>
+                    </li>
+                    <li>
+                        {!userdata?.user?.isVarified && !userdata?.user?.isNgo && (<button onClick={otp} className='flex items-center bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors'>
+                            <MdDomainVerification className='ml-[5px]' />
+                            Verify</button>)}
                     </li>
                 </ul>
             </div>

@@ -1,12 +1,14 @@
 import React from 'react'
-
+import { motion, delay } from 'framer-motion'
 export default function Steps() {
     return (
         <>
-             <h2 className="text-4xl font-bold text-center">Our Approach to Tackling Food Waste</h2> <br />
-             <div className='flex flex-wrap gap-[20px] justify-center items-center align-middle'>
+            <h2 className="text-4xl font-bold text-center">Our Approach to Tackling Food Waste</h2> <br />
+            <div className='flex flex-wrap gap-[20px] justify-center items-center align-middle'>
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
-                    <figure>
+                    <figure
+                        
+                    >
                         <img
                             src="/Rescue.png"
                             alt="earth"
@@ -34,7 +36,7 @@ export default function Steps() {
                         <img
                             src="/Reduce.png"
                             alt="hunger"
-                            className='w-[380px] h-[300px]'  />
+                            className='w-[380px] h-[300px]' />
                     </figure>
                     <div className="card-body">
                         <h2 className="card-title">Reduce</h2>

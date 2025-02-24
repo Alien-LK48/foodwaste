@@ -14,7 +14,6 @@ export default function Login() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
@@ -41,7 +40,7 @@ export default function Login() {
         if (userdata?.user) {
             if (userdata.user.isAdmin) {
                 navigate('/admin/admindashboard');
-            } else if (userdata.user.isNgo) {
+            } else if (userdata.user.isNgo && userdata.user.isVarified) {
                 navigate('/alldonatedfoods');
             } else if (userdata.user.isDonor) {
                 navigate('/donation/newdonate');

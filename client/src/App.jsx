@@ -19,6 +19,8 @@ import Allfoods from './pages/admin/Allfoods'
 import Allcollection from './pages/foodlist/Allcollection';
 import Ban from './pages/admin/Ban';
 import NGOs from './pages/admin/NGOs';
+import OTP from './components/navbar/OTP';
+import Message from './components/message/Message';
 function App() {
   const { isloggedin } = useContext(Appcontent)
   return (
@@ -46,6 +48,8 @@ function App() {
         <Route path='/allcollection' element={<Allcollection />} />
         <Route path='/ban' element={<Ban />} />
         <Route path='/verifyNGOs' element={<NGOs />} />
+        <Route path='/otp' element={<OTP />} />
+        <Route path='/msg' element={<Message />} />
       </Routes>
     </div>
   );

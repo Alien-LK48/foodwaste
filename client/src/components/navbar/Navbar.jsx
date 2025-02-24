@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { Appcontent } from '../contextapi/Appcontext';
 import ProfileButton from './ProfileButton';
 export default function Navbar() {
@@ -7,9 +7,15 @@ export default function Navbar() {
     const navigate = useNavigate();
     return (
         <div className='p-4 bg-gray-900 text-white'>
-            {isloggedin && !userdata?.user?.isVarified && (
+            {isloggedin && !userdata?.user?.isVarified && !userdata?.user?.isNgo && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
                     Account is not verified. Verify now.
+                </p>
+            )}
+
+            {isloggedin && userdata?.user?.isNgo && !userdata?.user?.isVarified && (
+                <p className='text-center text-red-500 font-semibold mb-4'>
+                    Your account is under verification . <Link to='/msg'>see more</Link>
                 </p>
             )}
             <div className='relative flex items-center gap-[300px]'>
@@ -20,15 +26,22 @@ export default function Navbar() {
                 <div className='flex gap-6'>
                     {isloggedin && userdata?.user?.isAdmin && (<NavLink to='/admin' className=''>Admin dashboard</NavLink>)}
                     {isloggedin && userdata?.user?.isAdmin && (<NavLink to='/allfoodData' className=''>get foodData</NavLink>)}
-                    {!userdata?.user?.isAdmin && !userdata?.user?.isNgo && !userdata?.user?.isDonor && (
+
+                    {(!isloggedin || userdata?.user?.isUser || (userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (
                         <>
-                            <NavLink to='/'>Home</NavLink>
+                            <NavLink to='/' className='ml-[60px]'>Home</NavLink>
                             <NavLink to='/about'>About</NavLink>
                             <NavLink to='/contact'>Contact Us</NavLink>
                         </>
                     )}
-                    {userdata?.user?.isNgo && (<NavLink to='/alldonatedfoods' className='ml-[100px]'>Collect requests</NavLink>)}
-                    {userdata?.user?.isNgo && (<NavLink to='/allcollection'>Collect a food</NavLink>)}
+
+                    {userdata?.user?.isNgo && userdata?.user?.isVarified && (
+                        <>
+                            <NavLink to='/alldonatedfoods' className='ml-[55px]'>Collect requests</NavLink>
+                            <NavLink to='/allcollection'>Collect a food</NavLink>
+                        </>
+                    )}
+
                     {isloggedin && userdata?.user?.isDonor && (
                         <NavLink to='/donation'>Donations</NavLink>
                     )}

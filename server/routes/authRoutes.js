@@ -4,7 +4,7 @@ import userAuth from '../middlewares/userAuth.js'
 import isBanned from '../middlewares/isbanned.js'
 
 export const authRouter = express.Router()
-
+// http://localhost:3000/api/auth
 authRouter.post('/register', register)
 authRouter.post('/login', isBanned, login)
 authRouter.post('/logout', logout)

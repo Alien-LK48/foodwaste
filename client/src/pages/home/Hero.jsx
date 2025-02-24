@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { motion, delay } from 'framer-motion'
 export default function Hero() {
   const navigate = useNavigate()
   const register = () => {
@@ -8,12 +8,16 @@ export default function Hero() {
   }
   return (
     <div
-      className="p-[20px] bg-cover bg-center h-[480px] w-full flex flex-col justify-center items-center text-white text-center"
+      className="relative p-[20px] bg-cover bg-center h-[480px] w-full flex flex-col justify-center items-center text-white text-center"
       style={{ backgroundImage: 'url(/hero.png)' }}
     >
-      <h1 className="text-6xl font-bold text-black animate-heading">
+      <motion.h1
+        whileInView={{ scale: [0, 1] }}
+        transition={{ delay: 0.25, duration:1 }}
+
+        className="text-6xl font-bold text-black animate-heading">
         Rescue. Reuse. Revive
-      </h1>
+      </motion.h1>
       <br />
       <p className="text-black text-justify">
         Every year, tons of perfectly good food go to waste while millions go hungry. We're here to change that. Join us in reducing food waste, redistributing surplus, and creating a more sustainable future—one meal at a time. Food waste isn't just wasted food—it's wasted resources, money, and opportunities. Our mission is simple: rescue surplus food, share it with those in need, and protect our planet. Be part of the change today! What if we told you that reducing food waste could help the environment and fight hunger at the same time? With your help, we can save fresh food from being discarded and make a real impact in our communities.
