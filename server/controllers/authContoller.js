@@ -203,6 +203,43 @@ export const sendVerifyOTP = async (req, res) => {
         })
     }
 }
+export const NGOverifier = async (req, res) => {
+    try {
+        const { id } = req.body
+        const user = await usermodel.findById(id)
+        if (user.isVarified) {
+            return res.json({
+                success: false,
+                message: `account already verified`
+            })
+        }
+        const otp = String(Math.floor(100000 + Math.random() * 900000))
+        user.verificationOtp = otp
+        user.verificationOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000
+
+        const currentTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        const expiryTime = format(new Date(user.verificationOtpExpireAt), "yyyy-MM-dd HH:mm:ss");
+
+        await user.save()
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: `Account varification otp`,
+            text: `Hello ${user.name}, your verification for ${user.roletype} is approved! Your OTP is ${otp}. Please use it to verify your account. It is valid from ${currentTime} to ${expiryTime}. Ensure secure usage!`
+        }
+        await transporter.sendMail(mailOptions)
+        return res.json({
+            success: true,
+            message: `verification message sent on ${user.email}`
+        })
+
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 
 export const verifyEmail = async (req, res) => {
     const { userid, otp } = req.body

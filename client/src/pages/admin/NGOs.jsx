@@ -16,8 +16,17 @@ export default function NGOs() {
         getngos()
     }, [])
 
-    const getdata = (id, email) => {
-        console.log(id, email)
+    const otp = async (id, email) => {
+        try {
+            axios.defaults.withCredentials = true
+            const { data } = await axios.post('http://localhost:3000/api/auth/NGOverifier', { id })
+            if (data.success) {
+                alert(`otp sent to email`)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     }
     return (
         <div className="overflow-x-auto">
@@ -47,7 +56,7 @@ export default function NGOs() {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="btn btn-sm bg-green-500 text-white ml-2" onClick={() => getdata(ngo._id, ngo.email)}>Verify</button>
+                                    <button className="btn btn-sm bg-green-500 text-white ml-2" onClick={() => otp(ngo._id, ngo.email)}>Verify</button>
                                 </td>
                             </tr>
                         ))

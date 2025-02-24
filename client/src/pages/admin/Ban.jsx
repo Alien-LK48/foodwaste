@@ -66,7 +66,7 @@ export default function Ban() {
                         {acc.map((account) => (
                             <tr key={account._id} className="hover:bg-gray-50">
                                 <td className="border p-2">{account._id}</td>
-                                <td className="border p-2">{account.name}</td>
+                                <td className="border p-2">{account.email}</td>
                                 <td className="border p-2">{account.isBanned ? `suspended` : `active`}</td>
                                 <td className="border p-2 text-center">
                                     <button

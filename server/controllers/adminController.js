@@ -72,7 +72,7 @@ export const foodData = async (req, res) => {
 export const totalcount = async (req, res) => {
     try {
         const admins = await usermodel.countDocuments({ isAdmin: true })
-        const ngos = await usermodel.countDocuments({ isNgo: true })
+        const ngos = await usermodel.countDocuments({ isNgo: true, isVarified: true })
         const donors = await usermodel.countDocuments({ isDonor: true })
         const users = await usermodel.countDocuments({ isUser: true })
         const ban = await usermodel.countDocuments({ isBanned: true })
@@ -158,8 +158,6 @@ export const UnbanAccount = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error", error: error.message })
     }
 }
-
-
 export const allngos = async (req, res) => {
 
     try {
