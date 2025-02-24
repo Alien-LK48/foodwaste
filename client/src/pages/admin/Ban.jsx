@@ -57,7 +57,8 @@ export default function Ban() {
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="border p-2">ID</th>
-                            <th className="border p-2">Name</th>
+                            <th className="border p-2">Email</th>
+                            <th className="border p-2">Work field</th>
                             <th className="border p-2">Status</th>
                             <th className="border p-2">Action</th>
                         </tr>
@@ -67,6 +68,7 @@ export default function Ban() {
                             <tr key={account._id} className="hover:bg-gray-50">
                                 <td className="border p-2">{account._id}</td>
                                 <td className="border p-2">{account.email}</td>
+                                <td className="border p-2">{account.roletype}</td>
                                 <td className="border p-2">{account.isBanned ? `suspended` : `active`}</td>
                                 <td className="border p-2 text-center">
                                     <button

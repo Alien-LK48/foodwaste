@@ -47,7 +47,7 @@ return (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-center items-center min-h-screen bg-gray-300 p-6"
+        className="flex justify-center items-center min-h-screen p-6 shadow-2xl bg-gray-100"
     >
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden w-[1050px] flex flex-col md:flex-row">
             <div className="hidden md:block w-1/2">

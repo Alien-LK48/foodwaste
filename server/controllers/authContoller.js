@@ -25,7 +25,8 @@ export const register = async (req, res) => {
                 isUser: true,
                 isAdmin: false,
                 isNgo: false,
-                isDonor: false
+                isDonor: false,
+                roletype: `user`
             });
         } else if (role === "ngo") {
             user = new usermodel({
