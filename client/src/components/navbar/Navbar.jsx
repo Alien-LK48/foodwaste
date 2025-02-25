@@ -34,7 +34,7 @@ export default function Navbar() {
                             <NavLink to='/contact'>Contact Us</NavLink>
                         </>
                     )}
-
+                    <NavLink to='/map'>see map</NavLink>
                     {userdata?.user?.isNgo && userdata?.user?.isVarified && (
                         <>
                             <NavLink to='/alldonatedfoods' className='ml-[55px]'>Collect requests</NavLink>
