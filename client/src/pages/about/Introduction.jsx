@@ -4,7 +4,7 @@ export default function Introduction() {
     return (
         <div
             className="p-[20px] bg-cover bg-center h-[480px] w-full flex flex-col justify-center items-center text-white text-center"
-            style={{ backgroundImage: 'url(/hero.png)' }}
+            style={{ backgroundImage: 'url(/about.png)' }}
         >
             <h1 className="text-6xl font-bold text-black animate-heading">
                 Our Mission

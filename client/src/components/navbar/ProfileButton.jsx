@@ -35,8 +35,8 @@ export default function ProfileButton() {
     return (
         <>
             <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="btn m-1 w-[50px] h-[50px] rounded-full">
-                    <FaUser className='w-[50px] h-[50px] text-4xl' />
+                <div tabIndex={0} role="button" className="btn m-1 w-[50px] h-[50px] rounded-full bg-[black]">
+                    <FaUser className='w-[50px] h-[50px] text-4xl text-white'/>
                 </div>
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box border-2 border-black z-[1] w-[110px] p-2 shadow">
                     <li className='mb-[5px]'>

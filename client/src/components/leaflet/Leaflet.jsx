@@ -12,7 +12,7 @@ const markerIcon = new L.Icon({
     popupAnchor: [0, -46]
 });
 
-export default function Gmap() {
+export default function Leaflet() {
     const center = [23.8103, 90.4125];
     const zoom = 15;
     const mapRef = useRef(null);

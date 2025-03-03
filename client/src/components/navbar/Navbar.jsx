@@ -6,18 +6,20 @@ export default function Navbar() {
     const { isloggedin, userdata } = useContext(Appcontent);
     const navigate = useNavigate();
     return (
-        <div className='p-4 bg-gray-900 text-white'>
+        <div className='p-4 bg-[#f3f4f6] text-black shadow-2xl'>
             {isloggedin && !userdata?.user?.isVarified && !userdata?.user?.isNgo && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
                     Account is not verified. Verify now.
+                    
                 </p>
             )}
 
             {isloggedin && userdata?.user?.isNgo && !userdata?.user?.isVarified && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
-                    Your account is under verification . <Link to='/msg'>see more</Link>
+                    Your account is under verification . <Link to='/msg'>see more</Link><hr />
                 </p>
             )}
+
             <div className='relative flex items-center gap-[300px]'>
                 <div className='flex items-center gap-4'>
                     <img src='/serpent.jpeg' alt='Logo' className='w-16 h-16 rounded-full' />
@@ -34,11 +36,16 @@ export default function Navbar() {
                             <NavLink to='/contact'>Contact Us</NavLink>
                         </>
                     )}
-                    <NavLink to='/map'>see map</NavLink>
+                    {isloggedin && userdata?.user?.isUser && (
+                        <>
+                            <NavLink to='/sell'>Sell a food</NavLink>
+                        </>
+                    )}
                     {userdata?.user?.isNgo && userdata?.user?.isVarified && (
                         <>
                             <NavLink to='/alldonatedfoods' className='ml-[55px]'>Collect requests</NavLink>
                             <NavLink to='/allcollection'>Collect a food</NavLink>
+                            <NavLink to='/map'>See Map</NavLink>
                         </>
                     )}
 

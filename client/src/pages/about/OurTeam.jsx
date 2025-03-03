@@ -10,9 +10,9 @@ export default function OurTeam() {
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div className="team-member">
                         <img
-                            src="/team/member1.jpg"
+                            src=""
                             alt="Team Member 1"
-                            className="w-full h-64 object-cover rounded-lg shadow-lg"
+                            className="w-full h-auto max-h-[260px] rounded-lg shadow-lg"
                         />
                         <h3 className="mt-4 text-xl font-semibold text-gray-800">John Doe</h3>
                         <p className="text-gray-600">Founder & CEO</p>
@@ -20,12 +20,11 @@ export default function OurTeam() {
                             John has been the driving force behind our mission to reduce food waste. With a background in social entrepreneurship, he founded our organization to tackle hunger and environmental issues together.
                         </p>
                     </div>
-
                     <div className="team-member">
                         <img
-                            src="/team/member2.jpg"
+                            src=""
                             alt="Team Member 2"
-                            className="w-full h-64 object-cover rounded-lg shadow-lg"
+                            className="w-full h-auto max-h-[260px] rounded-lg shadow-lg"
                         />
                         <h3 className="mt-4 text-xl font-semibold text-gray-800">Jane Smith</h3>
                         <p className="text-gray-600">Operations Manager</p>
@@ -36,9 +35,9 @@ export default function OurTeam() {
 
                     <div className="team-member">
                         <img
-                            src="/team/member3.jpg"
+                            src=""
                             alt="Team Member 3"
-                            className="w-full h-64 object-cover rounded-lg shadow-lg"
+                            className="w-full h-auto max-h-[260px] rounded-lg shadow-lg"
                         />
                         <h3 className="mt-4 text-xl font-semibold text-gray-800">Emily Brown</h3>
                         <p className="text-gray-600">Community Outreach Coordinator</p>

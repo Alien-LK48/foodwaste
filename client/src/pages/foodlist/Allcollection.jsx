@@ -27,7 +27,7 @@ export default function Allcollection() {
         try {
             console.log("Form Data:", formData);
             axios.defaults.withCredentials = true;
-            const { data } = await axios.post('http://localhost:3000/api/admin/collectfood', formData);
+            const { data } = await axios.post('http://localhost:3000/api/ngo/collectfood', formData);
             if (data.success) {
                 alert(`Published successfully, wait for response.`);
                 setFormData({
@@ -42,7 +42,7 @@ export default function Allcollection() {
                     donatesFrom: "",
                     foodname: "",
                     quantity: "",
-                    foodExpdate: "",
+                    foodExpdate: ""
                 })
             } else {
                 console.log("Error:", data.message || "Unknown error occurred.");

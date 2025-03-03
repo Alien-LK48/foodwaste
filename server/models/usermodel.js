@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
     teamMember: { type: String, default: `` },
     ngoRegNum: { type: String, default: `` },
     area: { type: String, default: `` },
-    donatedFoods: [{ type: mongoose.Schema.Types.ObjectId, ref: "foods" }],  // <-- Added field
+    donatedFoods: [{ type: mongoose.Schema.Types.ObjectId, ref: "foods" }], 
+    saleFoods: [{ type: mongoose.Schema.Types.ObjectId, ref: "sellfoods" }], 
     createdAt: { type: Date, default: Date.now },
 });
 

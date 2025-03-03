@@ -21,7 +21,8 @@ import Ban from './pages/admin/Ban';
 import NGOs from './pages/admin/NGOs';
 import OTP from './components/navbar/OTP';
 import Message from './components/message/Message';
-import Gmap from './components/google-map/Gmap';
+import Leaflet from './components/leaflet/Leaflet';
+import Sell from './pages/sell/Sell';
 function App() {
   const { isloggedin } = useContext(Appcontent)
   return (
@@ -51,7 +52,8 @@ function App() {
         <Route path='/verifyNGOs' element={<NGOs />} />
         <Route path='/otp' element={<OTP />} />
         <Route path='/msg' element={<Message />} />
-        <Route path='/map' element={<Gmap />} />
+        <Route path='/map' element={<Leaflet />} />
+        <Route path='/sell' element={<Sell />} />
       </Routes>
     </div>
   );

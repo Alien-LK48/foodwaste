@@ -3,7 +3,7 @@ import React from 'react';
 export default function OurStory() {
   return (
     <section className="py-12 px-6 bg-gray-50">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto shadow-2xl p-[20px] rounded-3xl">
         <h2 className="text-3xl font-bold text-center text-gray-800">Our Story</h2>
         <p className="mt-6 text-lg text-gray-700 text-justify">
           Our story begins with a simple idea: to combat food waste while providing for those in need. 

@@ -6,6 +6,7 @@ import connectToDb from './db/dbconnection.js'
 import { authRouter } from './routes/authRoutes.js'
 import { userRouter } from './routes/userRoutes.js'
 import { adminRouter } from './routes/adminRoute.js'
+import { ngoRouter } from './routes/ngoRoute.js'
 const app = express()
 config({ path: "./config.env" })
 
@@ -23,5 +24,6 @@ app.get('/', (req, res) => { res.send(`connected to express`) })
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/admin', adminRouter)
+app.use('/api/ngo', ngoRouter)
 
 export default app

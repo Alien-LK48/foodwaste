@@ -1,9 +1,10 @@
 import FoodModel from "../models/foodmodel.js";
+import SellFoodModel from "../models/sellfoodmodel.js";
 import usermodel from "../models/usermodel.js";
 export const getuserdata = async (req, res) => {
     try {
         const { userid } = req.body
-        const user = await usermodel.findById(userid).populate("donatedFoods");
+        const user = await usermodel.findById(userid).populate("donatedFoods").populate("saleFoods");
         if (!user) {
             return res.json({
                 success: false,
@@ -48,7 +49,7 @@ export const donateFood = async (req, res) => {
             user: userid,
         });
         const savedFood = await food.save();
-        user.donatedFoods.push(savedFood._id);
+        user.donatedFoods.push(savedFood._id)
         await user.save();
         res.status(201).json({ success: true, message: "Food posted successfully", food: savedFood });
     } catch (error) {
@@ -85,19 +86,17 @@ export const deleteFood = async (req, res) => {
         if (!food) {
             return res.status(404).json({ success: false, message: "Food not found" });
         }
-
+        // await usermodel.updateOne(
+        //     { donatedFoods: foodId },
+        //     { $pull: { donatedFoods: foodId } }
+        // );
         await FoodModel.findByIdAndDelete(foodId);
-        await usermodel.updateOne(
-            { donatedFoods: foodId },
-            { $pull: { donatedFoods: foodId } }
-        );
-
         res.status(200).json({ success: true, message: "Food deleted successfully" });
     } catch (error) {
         console.error("Error deleting food:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-};
+}
 
 export const receivefood = async (req, res) => {
     try {
@@ -121,7 +120,7 @@ export const receivefood = async (req, res) => {
         await food.save();
 
         const receiver = await usermodel.findById(userid);
-        
+
         res.status(200).json({
             success: true,
             message: "Food received successfully",
@@ -134,3 +133,49 @@ export const receivefood = async (req, res) => {
     }
 };
 
+
+export const sellfood = async (req, res) => {
+    try {
+        const { userid, foodName, description, location, quantity, price, expiryDate } = req.body
+        if (!userid) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+        const user = await usermodel.findById(userid);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        const food = new SellFoodModel({
+            foodName,
+            description,
+            location,
+            quantity,
+            price,
+            expiryDate,
+            user: userid,
+        });
+        const savedFood = await food.save();
+        user.saleFoods.push(savedFood._id)
+        await user.save();
+        res.status(201).json({ success: true, message: "Food posted successfully", food: savedFood });
+    } catch (error) {
+        console.error("Error selling foods:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}
+
+export const getsellfoods = async (req, res) => {
+    try {
+        const foods = await SellFoodModel.find()
+        if (!foods.length) {
+            return res.status(404).json({ success: false, message: "No food found." });
+        }
+        res.status(200).json({
+            success: true,
+            message: `got all foods`,
+            foods
+        });
+    } catch (error) {
+        console.error("could not fetch data", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}
