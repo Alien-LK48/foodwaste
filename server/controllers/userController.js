@@ -179,3 +179,61 @@ export const getsellfoods = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 }
+export const getsellfoodsbyid = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ success: false, message: "Invalid ID" });
+        }
+
+        const fooddata = await SellFoodModel.findById(id);
+
+        if (!fooddata) {
+            return res.status(404).json({ success: false, message: "Food not found" });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Food item retrieved successfully",
+            fooddata
+        });
+
+    } catch (error) {
+        console.error("Could not fetch data", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}
+
+export const editmysell = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateData = req.body;
+
+        const updatedFood = await SellFoodModel.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!updatedFood) {
+            return res.status(404).json({ success: false, message: "Food not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Food updated successfully", food: updatedFood });
+    } catch (error) {
+        console.error("Error updating food:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}
+
+export const deletepost = async (req, res) => {
+    try {
+        const { id } = req.body
+        const deletedFood = await SellFoodModel.findByIdAndDelete(id);
+        if (!deletedFood) {
+            return res.status(404).json({ success: false, message: "Food not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Post deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting post:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+

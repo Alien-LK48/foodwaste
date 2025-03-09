@@ -63,7 +63,7 @@ return (
                         <input type="radio" name="" id="" onClick={() => { navigate('/donorsignup') }} />
                         <p>donor</p>
                         <input type="radio" name="" id="" onClick={() => { navigate('/ngosignup') }} />
-                        <p>ngo</p>
+                        <p>collector</p>
                     </div>
                 </div> <br />
                 {error && (

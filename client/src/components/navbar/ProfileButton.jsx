@@ -36,7 +36,7 @@ export default function ProfileButton() {
         <>
             <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn m-1 w-[50px] h-[50px] rounded-full bg-[black]">
-                    <FaUser className='w-[50px] h-[50px] text-4xl text-white'/>
+                    <FaUser className='w-[50px] h-[50px] text-4xl text-white' />
                 </div>
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box border-2 border-black z-[1] w-[110px] p-2 shadow">
                     <li className='mb-[5px]'>
@@ -74,6 +74,10 @@ export default function ProfileButton() {
                         <button className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
                             Edit Profile
                         </button>
+                        <br /> <br />
+                        {userdata?.user?.isUser && (<button onClick={()=>{navigate('/mypost')}} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
+                            my post
+                        </button>)}
                         <div className="modal-action">
                             <label htmlFor="my_modal_6" className="btn">Close!</label>
                         </div>

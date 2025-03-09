@@ -14,7 +14,7 @@ export default function Sell() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    }
 
     const handleSubmit = async (e) => {
         try {
@@ -44,7 +44,7 @@ export default function Sell() {
         } catch (error) {
             console.log(error.message)
         }
-    };
+    }
 
     return (
         <motion.div
@@ -74,11 +74,11 @@ export default function Sell() {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="mb-4 relative">
                         <label className="block text-gray-600 font-semibold">Food Name</label>
-                        <input type="text" name="foodName" value={formData.foodName} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        <input type="text" maxLength={10} name="foodName" value={formData.foodName} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
                     </div>
                     <div className="mb-4 relative">
                         <label className="block text-gray-600 font-semibold">Description</label>
-                        <input type="text" name="description" value={formData.description} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        <input type="text" maxLength={50} name="description" value={formData.description} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
                     </div>
                     <div className="mb-4 relative">
                         <label className="block text-gray-600 font-semibold">Location</label>

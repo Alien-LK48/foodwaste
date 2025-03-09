@@ -23,6 +23,8 @@ import OTP from './components/navbar/OTP';
 import Message from './components/message/Message';
 import Leaflet from './components/leaflet/Leaflet';
 import Sell from './pages/sell/Sell';
+import MyPost from './pages/sell/MyPost';
+import EditSell from './pages/sell/EditSell';
 function App() {
   const { isloggedin } = useContext(Appcontent)
   return (
@@ -54,6 +56,8 @@ function App() {
         <Route path='/msg' element={<Message />} />
         <Route path='/map' element={<Leaflet />} />
         <Route path='/sell' element={<Sell />} />
+        <Route path='/mypost' element={<MyPost />} />
+        <Route path='/updatepost/:id' element={<EditSell />} />
       </Routes>
     </div>
   );

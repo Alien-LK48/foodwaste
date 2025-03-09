@@ -63,7 +63,7 @@ export default function Donorsignup() {
                             <input type="radio" name="" id="" defaultChecked />
                             <p>donor</p>
                             <input type="radio" name="" id="" onClick={() => { navigate('/ngosignup') }} />
-                            <p>ngo</p>
+                            <p>collector</p>
                         </div>
                     </div> <br />
                     {error && (
