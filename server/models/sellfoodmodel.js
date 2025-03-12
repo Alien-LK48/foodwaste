@@ -7,7 +7,8 @@ const SellFoodSchema = new mongoose.Schema(
     location: { type: String, required: true },
     quantity: { type: String, required: true },
     price: { type: Number, required: true },
-    expiryDate: { type: Date }
+    expiryDate: { type: Date },
+    soldby:[{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   },
   { timestamps: true }
 );

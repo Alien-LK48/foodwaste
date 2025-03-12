@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Appcontent } from "../contextapi/Appcontext";
+import { ToastContainer, toast } from 'react-toastify';
 export default function Login() {
     const [formData, setFormData] = useState({
         email: "",
@@ -103,6 +104,7 @@ export default function Login() {
                     Log in
                 </button>
             </motion.form>
+            <ToastContainer />
         </motion.div>
     );
 }

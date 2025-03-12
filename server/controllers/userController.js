@@ -1,6 +1,7 @@
 import FoodModel from "../models/foodmodel.js";
 import SellFoodModel from "../models/sellfoodmodel.js";
 import usermodel from "../models/usermodel.js";
+import CommentModel from "../models/commentmodel.js";
 export const getuserdata = async (req, res) => {
     try {
         const { userid } = req.body
@@ -133,7 +134,6 @@ export const receivefood = async (req, res) => {
     }
 };
 
-
 export const sellfood = async (req, res) => {
     try {
         const { userid, foodName, description, location, quantity, price, expiryDate } = req.body
@@ -152,6 +152,7 @@ export const sellfood = async (req, res) => {
             price,
             expiryDate,
             user: userid,
+            soldby: userid,
         });
         const savedFood = await food.save();
         user.saleFoods.push(savedFood._id)
@@ -163,22 +164,23 @@ export const sellfood = async (req, res) => {
     }
 }
 
-export const getsellfoods = async (req, res) => {
+export const foodsellpost = async (req, res) => {
     try {
-        const foods = await SellFoodModel.find()
+        const foods = await SellFoodModel.find().populate('soldby')
         if (!foods.length) {
             return res.status(404).json({ success: false, message: "No food found." });
         }
         res.status(200).json({
             success: true,
-            message: `got all foods`,
+            message: `got all foods by sellers`,
             foods
         });
     } catch (error) {
-        console.error("could not fetch data", error);
-        res.status(500).json({ success: false, message: "Server error", error: error.message });
+        console.error("Error getting post:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" })
     }
 }
+
 export const getsellfoodsbyid = async (req, res) => {
     try {
         const { id } = req.params;
@@ -237,3 +239,29 @@ export const deletepost = async (req, res) => {
     }
 };
 
+
+
+export const postComment = async (req, res) => {
+    try {
+        const { foodId, comment, userid } = req.body;
+
+        const food = await FoodModel.findById(foodId);
+        if (!food) {
+            return res.status(404).json({ success: false, message: "Food post not found" });
+        }
+
+        const newComment = new CommentModel({
+            comment,
+            food: foodId,
+            user: userid,
+        });
+        await newComment.save();
+        food.comments.push(newComment._id);
+        await food.save();
+
+        res.status(201).json({ success: true, message: "Comment posted successfully", comment: newComment });
+    } catch (err) {
+        console.error("Error posting comment:", err);
+        res.status(500).json({ success: false, message: "Error posting comment", error: err.message });
+    }
+};

@@ -9,10 +9,9 @@ export default function NavBar() {
         <div className='p-4 bg-[#f3f4f6] text-black shadow-2xl'>
             {isloggedin && !userdata?.user?.isVarified && !userdata?.user?.isNgo && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
-                    Account is not verified. Verify now.
+                    Account is not verified.  <Link to='/otp'>Verify now.</Link> <hr />
                 </p>
             )}
-
             {isloggedin && userdata?.user?.isNgo && !userdata?.user?.isVarified && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
                     Your account is under verification . <Link to='/msg'>see more</Link><hr />
@@ -28,17 +27,19 @@ export default function NavBar() {
                     {isloggedin && userdata?.user?.isAdmin && (<NavLink to='/admin' className=''>Admin dashboard</NavLink>)}
                     {isloggedin && userdata?.user?.isAdmin && (<NavLink to='/allfoodData' className=''>get foodData</NavLink>)}
 
-                    {(!isloggedin || userdata?.user?.isUser || (userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/' className=''>Home</NavLink>)}
-                    {(!isloggedin || userdata?.user?.isUser || (userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/about'>About</NavLink>)}
-                    {(!isloggedin || userdata?.user?.isUser || (userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/contact'>Contact Us</NavLink>)}
+                    {(!isloggedin || userdata?.user?.isUser || ((userdata?.user?.isDonor)|| userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/' className=''>Home</NavLink>)}
+                    {(!isloggedin || userdata?.user?.isUser || ((userdata?.user?.isDonor)|| userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/about'>About</NavLink>)}
+                    {(!isloggedin || userdata?.user?.isUser || ((userdata?.user?.isDonor)|| userdata?.user?.isNgo && !userdata?.user?.isVarified)) && (<NavLink to='/contact'>Contact Us</NavLink>)}
+                    
 
                     {isloggedin && userdata?.user?.isUser && userdata?.user?.isVarified && (<NavLink to='/sell'>Sell a food</NavLink>)}
 
                     {userdata?.user?.isNgo && userdata?.user?.isVarified && (<NavLink to='/alldonatedfoods' className=''>Collect requests</NavLink>)}
-                    {userdata?.user?.isNgo && userdata?.user?.isVarified && (<NavLink to='/allcollection'>Collect a food</NavLink> )}
-                    {userdata?.user?.isNgo && userdata?.user?.isVarified && ( <NavLink to='/map'>See Map</NavLink>)}
+                    {userdata?.user?.isNgo && userdata?.user?.isVarified && (<NavLink to='/allcollection'>Collect a food</NavLink>)}
+                    {userdata?.user?.isNgo && userdata?.user?.isVarified && (<NavLink to='/map'>See Map</NavLink>)}
+                    {userdata?.user?.isNgo && userdata?.user?.isVarified && (<NavLink to='/allposts'>Posts</NavLink>)}
 
-                    {isloggedin && userdata?.user?.isDonor && (<NavLink to='/donation'>Donations</NavLink>)}
+                    {isloggedin && userdata?.user?.isDonor && userdata?.user?.isVarified && (<NavLink to='/donation'>Donations</NavLink>)}
 
                 </div>
                 {isloggedin ? (

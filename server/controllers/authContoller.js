@@ -4,8 +4,8 @@ import usermodel from '../models/usermodel.js'
 import transporter from '../config/nodeMailer.js'
 import { format } from 'date-fns';
 export const register = async (req, res) => {
-    const { name, email, password, phone, role, roletype, teamMember, ngoRegNum, area } = req.body;
-    console.log("Received Data:", { name, email, password, phone, role });
+    const { name, email, password, phone, role, roletype, teamMember, ngoRegNum, area, address } = req.body;
+    console.log("Received Data:", { name, email, password, phone, role, address });
     try {
         const existinguser = await usermodel.findOne({ email });
         if (existinguser) {
@@ -22,6 +22,7 @@ export const register = async (req, res) => {
                 email,
                 password: hashedpassword,
                 phone,
+                address,
                 isUser: true,
                 isAdmin: false,
                 isNgo: false,
@@ -40,6 +41,7 @@ export const register = async (req, res) => {
                 isDonor: false,
                 ngoRegNum,
                 area,
+                address,
                 teamMember,
                 roletype
             });
@@ -50,6 +52,7 @@ export const register = async (req, res) => {
                 email,
                 password: hashedpassword,
                 phone,
+                address,
                 isUser: false,
                 isAdmin: false,
                 isNgo: false,

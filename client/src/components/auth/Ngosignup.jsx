@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,13 +23,50 @@ export default function Ngosignup() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+     useEffect(() => {
+            const loadGoogleMaps = () => {
+                const script = document.createElement("script");
+                script.src = `https://maps.gomaps.pro/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
+                script.async = true;
+                script.onload = () => {
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            async (position) => {
+                                const { latitude, longitude } = position.coords;
+                                const userLocation = { lat: latitude, lng: longitude };
+    
+                                const geocoder = new window.google.maps.Geocoder();
+                                geocoder.geocode({ location: userLocation }, (results, status) => {
+                                    if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
+                                        const address = results[0].formatted_address;
+                                        setFormData((prevData) => ({
+                                            ...prevData,
+                                            address: address,
+                                        }));
+                                    }
+                                });
+                            },
+                            (error) => {
+                                toast.error("Geolocation failed: " + error.message);
+                            }
+                        );
+                    } else {
+                        toast.error("Geolocation is not supported by this browser.");
+                    }
+                };
+                document.head.appendChild(script);
+            };
+    
+            loadGoogleMaps();
+        }, []);
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
             setError("")
             console.log(formData)
             axios.defaults.withCredentials = true
-            const { data } = await axios.post('http://localhost:3000/api/auth/register', { email: formData.email, password: formData.password, name: formData.name, phone: formData.phone, role: formData.role, roletype: formData.roletype, ngoRegNum: formData.ngoRegNum, area: formData.area, teamMember: formData.teamMember })
+            const { data } = await axios.post('http://localhost:3000/api/auth/register', { email: formData.email, password: formData.password, name: formData.name, phone: formData.phone, role: formData.role, roletype: formData.roletype, ngoRegNum: formData.ngoRegNum, area: formData.area, teamMember: formData.teamMember, address: formData.address })
             if (data.success) {
                 setIsloggedin(true)
                 await getuserdata()
@@ -49,11 +86,9 @@ export default function Ngosignup() {
             transition={{ duration: 0.5 }}
             className="flex justify-center items-center min-h-screen bg-gray-100 p-6"
         >
-            <div className="bg-white shadow-lg rounded-2xl overflow-hidden w-[1050px] flex flex-col md:flex-row">
-                <div className="hidden md:block w-1/2">
-                    <img src="/public/ngo.jpg" alt="Signup" className="w-[500px] h-full object-cover" />
-                </div>
-                <div className="w-full md:w-1/2 p-8">
+            <div className="bg-white shadow-lg rounded-2xl overflow-hidden w-[650px] flex flex-col md:flex-row">
+
+                <div className="w-[650px]  p-8">
                     <h2 className="text-3xl font-bold text-gray-800 text-center">Create an Account</h2> <br />
                     <div className='flex flex-col justify-center items-center'>
                         <label className="block text-gray-600 font-semibold">Register as</label>
@@ -89,6 +124,7 @@ export default function Ngosignup() {
                                 onChange={handleChange}
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         <div>
@@ -100,6 +136,7 @@ export default function Ngosignup() {
                                 onChange={handleChange}
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         <div>
@@ -111,6 +148,7 @@ export default function Ngosignup() {
                                 onChange={handleChange}
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         <div>
@@ -122,6 +160,7 @@ export default function Ngosignup() {
                                 onChange={handleChange}
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         <div>
@@ -132,6 +171,7 @@ export default function Ngosignup() {
                                 onChange={handleChange}
                                 required
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             >
                                 <option value="">Select Type</option>
                                 <option value="NGO">NGO</option>
@@ -149,6 +189,7 @@ export default function Ngosignup() {
                                 required
                                 placeholder='Organization Address'
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         <div>
@@ -161,6 +202,7 @@ export default function Ngosignup() {
                                 required
                                 placeholder='regions to collect/distribute food'
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>
                         {formData.roletype === `NGO` && (<div>
@@ -173,6 +215,7 @@ export default function Ngosignup() {
                                 required
                                 placeholder='Registration Number of NGO'
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>)}
                         {(formData.roletype === `Individual Volunteer` || formData.roletype === `Charity Group`) && (<div>
@@ -185,6 +228,7 @@ export default function Ngosignup() {
                                 required
                                 placeholder='How many member in your team?'
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                autoComplete="off"
                             />
                         </div>)}
                         <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Sign Up</button>

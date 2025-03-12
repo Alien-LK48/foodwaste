@@ -26,7 +26,6 @@ export default function NGOs() {
         } catch (error) {
             console.log(error)
         }
-
     }
     return (
         <div className="overflow-x-auto">
@@ -48,13 +47,16 @@ export default function NGOs() {
                                     <label htmlFor={`ngomodal-${ngo._id}`} className="btn btn-sm bg-blue-500 text-white">View Details</label>
                                     <input type="checkbox" id={`ngomodal-${ngo._id}`} className="modal-toggle" />
                                     <div className="modal" role="dialog">
-                                        <div className="modal-box">
-                                            <h3 className="text-lg font-bold">{ngo.name}</h3>
-                                            <p className="py-4">{ngo.roletype}</p>
-                                            <div className="modal-action">
-                                                <label htmlFor={`ngomodal-${ngo._id}`} className="btn">Close</label>
+                                        <div className="modal-box bg-white p-6 rounded-xl shadow-lg max-w-lg mx-auto">
+                                            <h3 className="text-2xl font-semibold text-gray-800">{ngo.name}</h3>
+                                            <p className="py-2 text-gray-600"><strong>Type:</strong> {ngo.roletype}</p>
+                                            <p className="py-2 text-gray-600"><strong>Address:</strong> {ngo.address}</p>
+                                            <p className="py-2 text-gray-600"><strong>Working Area:</strong> {ngo.area}</p>
+                                            <div className="modal-action mt-6">
+                                                <label htmlFor={`ngomodal-${ngo._id}`} className="btn bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Close</label>
                                             </div>
                                         </div>
+
                                     </div>
                                     <button className="btn btn-sm bg-green-500 text-white ml-2" onClick={() => otp(ngo._id, ngo.email)}>Verify</button>
                                 </td>
