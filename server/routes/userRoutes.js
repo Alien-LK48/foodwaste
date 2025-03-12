@@ -15,7 +15,6 @@ userRouter.put('/receivefood', userAuth, receivefood);
 userRouter.get('/sellFood/:id', getsellfoodsbyid);
 userRouter.put('/sellFood/:id', editmysell);
 userRouter.delete('/deletepost', deletepost);
-userRouter.get('/foodsellpost', foodsellpost)
+userRouter.get('/foodsellpost', foodsellpost);
 userRouter.post('/postacomment', userAuth, postComment);
-userRouter.get('/getcomments/:foodId', getcomments);
-
+userRouter.get('/getcomments', getcomments);

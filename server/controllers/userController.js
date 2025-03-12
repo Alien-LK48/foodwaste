@@ -270,9 +270,7 @@ export const postComment = async (req, res) => {
 
 export const getcomments = async (req, res) => {
     try {
-        const { foodId } = req.params;
-        const comments = await CommentModel.find({ food: foodId }).populate("userComment", "email");
-
+        const comments = await CommentModel.find().populate("userComment");
         res.status(200).json({
             success: true,
             comments,

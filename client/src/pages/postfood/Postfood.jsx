@@ -8,9 +8,7 @@ export default function Postfood() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [comments, setComments] = useState({});
-    const [allComments, setAllComments] = useState([]); // Stores all comments for each post
-
-    // Fetch all food posts
+    const [allcomments, setAllcomments] = useState([])
     const fetchFoodPosts = async () => {
         try {
             const response = await axios.get("http://localhost:3000/api/user/foodsellpost");
@@ -26,41 +24,34 @@ export default function Postfood() {
             setLoading(false);
         }
     };
-
-    // Fetch comments for a specific food post
-    const fetchComments = async (foodId) => {
+    const fetchedcomments = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:3000/api/user/getcomments/${foodId}`);
+            const { data } = await axios.get('http://localhost:3000/api/user/getcomments')
             if (data.success) {
-                setAllComments((prev) => ({ ...prev, [foodId]: data.comments }));
+                setAllcomments(data.comments)
             } else {
-                console.error("Failed to fetch comments:", data.message);
+                setError(data.message || "Failed to fetch food posts");
             }
-        } catch (error) {
-            console.error("Error fetching comments:", error);
+        } catch (err) {
+            setError("Error fetching data");
+            console.error("Error:", err);
         }
-    };
-
+    }
     useEffect(() => {
         fetchFoodPosts();
+        fetchedcomments()
     }, []);
 
-    const changeComment = (e, foodId) => {
+    const changecomment = (e, foodId) => {
         setComments({ ...comments, [foodId]: e.target.value });
     };
-
-    const submitComment = async (e, foodId) => {
+    const submitcomment = async (e, foodId) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post('http://localhost:3000/api/user/postacomment', { 
-                foodId, 
-                comment: comments[foodId], 
-                userid: userdata._id 
-            });
-
+            const { data } = await axios.post('http://localhost:3000/api/user/postacomment', { foodId, comment: comments[foodId], });
             if (data.success) {
                 setComments({ ...comments, [foodId]: "" });
-                fetchComments(foodId); // Refresh comments after posting
+                fetchedcomments()
             } else {
                 console.error("Failed to post comment:", data.message);
             }
@@ -68,7 +59,6 @@ export default function Postfood() {
             console.error("Error posting comment:", error);
         }
     };
-
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-6">All Food Posts</h2>
@@ -88,40 +78,29 @@ export default function Postfood() {
                             <p><strong>Location:</strong> {food.location}</p>
                             <p><strong>Quantity:</strong> {food.quantity}</p>
                             <p><strong>Expiry Date:</strong> {new Date(food.expiryDate).toLocaleDateString()}</p>
-                            
                             {/* Comment Button & Modal */}
-                            <label htmlFor={`comments-${food._id}`} className="btn btn-primary mt-3" 
-                                onClick={() => fetchComments(food._id)}>
-                                View Comments
-                            </label>
+                            <label htmlFor={`comments-${food._id}`} className="btn btn-primary mt-3">Comment</label>
                             <input type="checkbox" id={`comments-${food._id}`} className="modal-toggle" />
                             <div className="modal">
                                 <div className="modal-box">
-                                    <h3 className="text-lg font-bold">Comments on {food.foodName}</h3>
-
-                                    {/* Display all comments */}
-                                    <div className="mb-4 max-h-40 overflow-y-auto">
-                                        {allComments[food._id] && allComments[food._id].length > 0 ? (
-                                            allComments[food._id].map((comment, index) => (
-                                                <p key={index} className="p-2 border-b">{comment.userComment}: {comment.comment}</p>
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-500">No comments yet.</p>
-                                        )}
-                                    </div>
-
-                                    {/* Add New Comment */}
+                                    <h3 className="text-lg font-bold">Comment on {food.foodName}</h3>
+                                    {/* display allcomments */}
+                                    {allcomments.length === 0 ? (<p>no comments</p>)
+                                        :
+                                        allcomments.map((com) => (<div key={com._id}>
+                                            <p className="border-2 border-black p-[5px]">{com.comment}</p> <br />
+                                        </div>))}
                                     <textarea
                                         className="w-full border rounded p-2 mt-2 resize-none"
                                         placeholder="Write your comment..."
-                                        onChange={(e) => changeComment(e, food._id)}
+                                        onChange={(e) => changecomment(e, food._id)}
                                         value={comments[food._id] || ""}
                                         name='comments'
                                     ></textarea>
                                     <div className="modal-action">
                                         <button
                                             className="btn btn-success"
-                                            onClick={(e) => submitComment(e, food._id)}
+                                            onClick={(e) => submitcomment(e, food._id)}
                                         >
                                             Post Comment
                                         </button>
