@@ -239,29 +239,46 @@ export const deletepost = async (req, res) => {
     }
 };
 
-
-
 export const postComment = async (req, res) => {
     try {
         const { foodId, comment, userid } = req.body;
-
-        const food = await FoodModel.findById(foodId);
+        console.log(foodId)
+        console.log(comment)
+        const food = await SellFoodModel.findById(foodId);
         if (!food) {
             return res.status(404).json({ success: false, message: "Food post not found" });
         }
-
         const newComment = new CommentModel({
             comment,
             food: foodId,
-            user: userid,
-        });
+            userComment: userid
+        })
         await newComment.save();
         food.comments.push(newComment._id);
         await food.save();
 
-        res.status(201).json({ success: true, message: "Comment posted successfully", comment: newComment });
+        res.status(201).json({
+            success: true,
+            message: "Comment posted successfully",
+            comment: newComment,
+        });
     } catch (err) {
         console.error("Error posting comment:", err);
         res.status(500).json({ success: false, message: "Error posting comment", error: err.message });
     }
 };
+
+export const getcomments = async (req, res) => {
+    try {
+        const { foodId } = req.params;
+        const comments = await CommentModel.find({ food: foodId }).populate("userComment", "email");
+
+        res.status(200).json({
+            success: true,
+            comments,
+        });
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}

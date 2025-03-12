@@ -1,4 +1,3 @@
-// In FoodModel.js
 
 import mongoose from 'mongoose';
 
@@ -13,7 +12,8 @@ const FoodSchema = new mongoose.Schema(
     isreceived: { type: Boolean, default: false },
     donatesFrom: { type: String, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-    receivedBy: { type: mongoose.Schema.Types.ObjectId, ref: "users" }
+    receivedBy: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    
   },
   { timestamps: true }
 );
