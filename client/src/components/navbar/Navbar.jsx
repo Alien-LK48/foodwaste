@@ -6,7 +6,7 @@ export default function NavBar() {
     const { isloggedin, userdata } = useContext(Appcontent);
     const navigate = useNavigate();
     return (
-        <div className='p-4 bg-[#f3f4f6] text-black shadow-2xl'>
+        <div className='p-4 bg-[#DD8E31] text-black shadow-2xl'>
             {isloggedin && !userdata?.user?.isVarified && !userdata?.user?.isNgo && (
                 <p className='text-center text-red-500 font-semibold mb-4'>
                     Account is not verified.  <Link to='/otp'>Verify now.</Link> <hr />
@@ -21,7 +21,7 @@ export default function NavBar() {
             <div className='relative flex items-center gap-[300px]'>
                 <div className='flex items-center gap-4'>
                     <img src='/logo.jpeg' alt='Logo' className='w-16 h-16 rounded-full' />
-                    <h1 className='text-3xl font-bold text-yellow-500'>Food waste</h1>
+                    <h1 className='text-3xl font-bold text-[green]'>Food waste</h1>
                 </div>
                 <div className='flex flex-row align-middle justify-center items-center gap-6'>
                     {isloggedin && userdata?.user?.isAdmin && (<NavLink to='/admin' className=''>Admin dashboard</NavLink>)}

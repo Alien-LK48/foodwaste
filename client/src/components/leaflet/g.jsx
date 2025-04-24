@@ -1,135 +1,173 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { MapContainer, Marker, TileLayer, Popup, Polyline } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import 'leaflet-control-geocoder';
-import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
+import React, { useEffect, useState } from "react";
 
-const markerIcon = new L.Icon({
-    iconUrl: "/marker.png",
-    iconSize: [35, 45],
-    iconAnchor: [17, 46],
-    popupAnchor: [0, -46]
-});
+const Leaflet = () => {
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [searchedPlace, setSearchedPlace] = useState(null);
+  const [map, setMap] = useState(null);
+  const [geocoder, setGeocoder] = useState(null);
+  const [currentPlaceAddress, setCurrentPlaceAddress] = useState("");
+  const [searchedPlaceAddress, setSearchedPlaceAddress] = useState("");
+  const [distance, setDistance] = useState("");
+  let directionsService;
+  let directionsRenderer;
 
-export default function Leaflet() {
-    const center = [23.8103, 90.4125];
-    const zoom = 15;
-    const mapRef = useRef(null);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
-    const [selectedPosition, setSelectedPosition] = useState(center);
-    const [userPosition, setUserPosition] = useState(null);
-    const [distance, setDistance] = useState(null);
-    const [route, setRoute] = useState([]);
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = `https://maps.gomaps.pro/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
+    script.async = true;
+    script.onload = () => initMap();
+    document.head.appendChild(script);
 
-    useEffect(() => {
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
+  const initMap = () => {
+    if (window.google) {
+      const newMap = new window.google.maps.Map(document.getElementById("map"), {
+        center: { lat: 40.748817, lng: -73.985428 },
+        zoom: 13,
+      });
+      setMap(newMap);
+      const geocoderInstance = new window.google.maps.Geocoder();
+      setGeocoder(geocoderInstance);
+
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                setUserPosition([latitude, longitude]);
-            },
-            (error) => console.error("Error fetching location: ", error),
-            { enableHighAccuracy: true }
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const userLocation = { lat: latitude, lng: longitude };
+            setCurrentLocation(userLocation);
+            newMap.setCenter(userLocation);
+            new window.google.maps.Marker({
+              position: userLocation,
+              map: newMap,
+              title: "You are here!",
+            });
+            geocoderInstance.geocode({ location: userLocation }, (results, status) => {
+              if (status === "OK" && results[0]) {
+                setCurrentPlaceAddress(results[0].formatted_address);
+              }
+            });
+          },
+          () => {
+            alert("Geolocation not supported!");
+          }
         );
-    }, []);
+      }
 
-    const goToMarker = () => {
-        if (mapRef.current) {
-            mapRef.current.setView(center, zoom);
+      const input = document.getElementById("place-search");
+      const autocomplete = new window.google.maps.places.Autocomplete(input, {
+        fields: ["place_id", "geometry", "name", "formatted_address"],
+      });
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+          const placeLocation = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          };
+          setSearchedPlace(placeLocation);
+          setSearchedPlaceAddress(place.formatted_address || "Unknown Address");
+          newMap.panTo(placeLocation);
+          new window.google.maps.Marker({
+            position: placeLocation,
+            map: newMap,
+            title: place.name,
+          });
+
+          if (currentLocation) {
+            drawPath(currentLocation, placeLocation, newMap);
+            calculateDistance(currentLocation, placeLocation);
+          }
         }
-    };
+      });
 
-    const handleSearch = async (query) => {
-        setSearchQuery(query);
-        if (query.length > 2) {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=BD`);
-            const data = await response.json();
-            setSuggestions(data);
+      directionsService = new window.google.maps.DirectionsService();
+      directionsRenderer = new window.google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(newMap);
+    }
+  };
+
+  const drawPath = (origin, destination, map) => {
+    if (!directionsService || !directionsRenderer) {
+      directionsService = new window.google.maps.DirectionsService();
+      directionsRenderer = new window.google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+    }
+    const request = {
+      origin,
+      destination,
+      travelMode: "DRIVING",
+    };
+    directionsService.route(request, (result, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(result);
+      } else {
+        alert("Failed to load directions: " + status);
+      }
+    });
+  };
+
+  const calculateDistance = (origin, destination) => {
+    if (!origin || !destination) return;
+    const service = new window.google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+      {
+        origins: [origin],
+        destinations: [destination],
+        travelMode: "DRIVING",
+      },
+      (response, status) => {
+        if (status === "OK") {
+          const distanceText = response.rows[0].elements[0].distance.text;
+          setDistance(distanceText);
         } else {
-            setSuggestions([]);
+          alert("Distance calculation failed: " + status);
         }
-    };
-
-    const handleSelectLocation = async (lat, lon) => {
-        setSelectedPosition([lat, lon]);
-        if (mapRef.current) {
-            mapRef.current.setView([lat, lon], zoom);
-        }
-        setSuggestions([]);
-        setSearchQuery("");
-        if (userPosition) {
-            const response = await fetch(
-                `https://router.project-osrm.org/route/v1/driving/${userPosition[1]},${userPosition[0]};${lon},${lat}?overview=full&geometries=geojson`
-            );
-            const data = await response.json();
-            if (data.routes.length > 0) {
-                setRoute(data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]));
-                setDistance((data.routes[0].distance / 1000).toFixed(2));
-            }
-        }
-    };
-
-    return (
-        <div className="flex flex-col justify-center items-center h-screen space-y-4 relative">
-            <div className="relative w-[400px] z-50">
-                <input
-                    type="text"
-                    className="w-full p-2 border rounded-lg shadow-sm"
-                    placeholder="Search location in Bangladesh..."
-                    value={searchQuery}
-                    onChange={(e) => handleSearch(e.target.value)}
-                />
-                {suggestions.length > 0 && (
-                    <ul className="absolute bg-white border rounded-lg shadow-lg w-full max-h-60 overflow-y-auto z-50">
-                        {suggestions.map((place, index) => (
-                            <li
-                                key={index}
-                                className="p-2 hover:bg-gray-200 cursor-pointer"
-                                onClick={() => handleSelectLocation(place.lat, place.lon)}
-                            >
-                                {place.display_name}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-            <div className="w-[1200px] h-[500px] relative z-0">
-                <MapContainer
-                    center={selectedPosition}
-                    zoom={zoom}
-                    className="w-full h-full rounded-lg shadow-lg"
-                    ref={mapRef}
-                >
-                    <TileLayer
-                        url={`https://tile.openstreetmap.org/{z}/{x}/{y}.png`}
-                        attribution=""
-                    />
-                    {userPosition && (
-                        <Marker position={userPosition} icon={markerIcon}>
-                            <Popup>📍 You are here</Popup>
-                        </Marker>
-                    )}
-                    <Marker position={selectedPosition} icon={markerIcon}>
-                        <Popup>📍 Selected Location</Popup>
-                    </Marker>
-                    {route.length > 0 && (
-                        <Polyline
-                            positions={route}
-                            color="blue"
-                            weight={5}
-                            opacity={0.8}
-                        />
-                    )}
-                </MapContainer>
-            </div>
-            {distance && <p className="text-lg font-semibold text-blue-500">Distance: {distance} km</p>}
-            <button
-                onClick={goToMarker}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition mt-2"
-            >
-                Home
-            </button>
-        </div>
+      }
     );
-}
+  };
+
+  return (
+    <div>
+      <div style={{ position: "relative", width: "100%", height: "400px" }}>
+        <div id="map" style={{ width: "100%", height: "100%" }}></div>
+        <input
+          id="place-search"
+          type="text"
+          placeholder="Search for a place"
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            zIndex: 10,
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            width: "500px",
+          }}
+        />
+      </div>
+
+      <div style={{ padding: "10px", marginTop: "20px" }}>
+        <h3>Current Location:</h3>
+        <p>{currentPlaceAddress || "Loading..."}</p>
+
+        <h3>Searched Place:</h3>
+        <p>{searchedPlaceAddress || "No place selected"}</p>
+
+        {distance && (
+          <>
+            <h3>Distance:</h3>
+            <p>{distance}</p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Leaflet;

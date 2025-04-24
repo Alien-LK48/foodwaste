@@ -8,8 +8,11 @@ const SellFoodSchema = new mongoose.Schema(
     quantity: { type: String, required: true },
     price: { type: Number, required: true },
     expiryDate: { type: Date },
-    soldby:[{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+    soldby: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
+    image: {
+      type: String
+    }
   },
   { timestamps: true }
 );

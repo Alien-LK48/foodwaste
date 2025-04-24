@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from "framer-motion";
 import axios from 'axios'
+import { Appcontent } from '../../components/contextapi/Appcontext';
 export default function Sell() {
     const [formData, setFormData] = useState({
         foodName: "",
@@ -11,23 +12,39 @@ export default function Sell() {
         expiryDate: ""
     });
     const [error, setError] = useState("");
-
+    const [imgs, setImgs] = useState(null)
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
-
+    const { userdata } = useContext(Appcontent)
+    const images = (e) => {
+        setImgs(e.target.files[0])
+    }
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.foodName || !formData.description || !formData.location || !formData.quantity || !formData.price || !formData.expiryDate || !imgs) {
+            setError("All fields including image are required!");
+            return;
+        }
         try {
-            e.preventDefault();
-            if (!formData.foodName || !formData.description || !formData.location || !formData.quantity || !formData.price || !formData.expiryDate) {
-                setError("All fields are required!");
-                return;
-            }
             setError("");
-            axios.defaults.withCredentials = true
-            const { data } = await axios.post('http://localhost:3000/api/user/sellFood', { foodName: formData.foodName, description: formData.description, location: formData.location, quantity: formData.quantity, price: formData.price, expiryDate: formData.expiryDate })
+            const form = new FormData();
+            form.append("foodName", formData.foodName);
+            form.append("description", formData.description);
+            form.append("location", formData.location);
+            form.append("quantity", formData.quantity);
+            form.append("price", formData.price);
+            form.append("expiryDate", formData.expiryDate);
+            form.append("demoimg", imgs);
+            form.append("userid", userdata.user._id);
+            axios.defaults.withCredentials = true;
+            const { data } = await axios.post('http://localhost:3000/api/user/sellFood', form, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
             if (data.success) {
-                alert(`published successfully`)
+                alert(`Published successfully`);
                 setFormData({
                     foodName: "",
                     description: "",
@@ -35,16 +52,15 @@ export default function Sell() {
                     quantity: "",
                     price: "",
                     expiryDate: ""
-                })
+                });
+                setImgs(null);
+            } else {
+                console.log(data.message || "Unknown error");
             }
-            else {
-                console.log(data.error)
-            }
-            console.log("Food Data Submitted:", formData);
         } catch (error) {
-            console.log(error.message)
+            console.log("Upload failed:", error.message);
         }
-    }
+    };
 
     return (
         <motion.div
@@ -96,6 +112,9 @@ export default function Sell() {
                         <label className="block text-gray-600 font-semibold">Expiry Date</label>
                         <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
                     </div>
+                    <div>
+                        <input type="file" name="demoimg" id="" onChange={images} />
+                    </div> <br /><br />
                 </div>
                 <button
                     type="submit"

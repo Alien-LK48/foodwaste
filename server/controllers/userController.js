@@ -136,7 +136,7 @@ export const receivefood = async (req, res) => {
 
 export const sellfood = async (req, res) => {
     try {
-        const { userid, foodName, description, location, quantity, price, expiryDate } = req.body
+        const { userid, foodName, description, location, quantity, price, expiryDate, demoimg } = req.body
         if (!userid) {
             return res.status(401).json({ success: false, message: "Unauthorized" });
         }
@@ -144,6 +144,7 @@ export const sellfood = async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
+        const imagePath = req.file?.filename;
         const food = new SellFoodModel({
             foodName,
             description,
@@ -153,6 +154,7 @@ export const sellfood = async (req, res) => {
             expiryDate,
             user: userid,
             soldby: userid,
+            image: imagePath,
         });
         const savedFood = await food.save();
         user.saleFoods.push(savedFood._id)
@@ -256,7 +258,6 @@ export const postComment = async (req, res) => {
         await newComment.save();
         food.comments.push(newComment._id);
         await food.save();
-
         res.status(201).json({
             success: true,
             message: "Comment posted successfully",
@@ -271,6 +272,19 @@ export const postComment = async (req, res) => {
 export const getcomments = async (req, res) => {
     try {
         const comments = await CommentModel.find().populate("userComment");
+        res.status(200).json({
+            success: true,
+            comments,
+        });
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
+    }
+}
+export const getcommentsbyid = async (req, res) => {
+    try {
+        const { id } = req.params
+        const comments = await CommentModel.find({ food: id }).populate("userComment");
         res.status(200).json({
             success: true,
             comments,

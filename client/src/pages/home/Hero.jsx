@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import './css.css'  // Import the CSS file
+import './css.css'
 
 export default function Hero() {
   const navigate = useNavigate()

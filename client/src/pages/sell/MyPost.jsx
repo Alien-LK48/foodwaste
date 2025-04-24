@@ -15,22 +15,11 @@ export default function MyPost() {
         }
     }, [userdata]);
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString("en-US", {
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    };
-
-
     const deleteit = async (id) => {
         try {
             axios.defaults.withCredentials = true;
             const { data } = await axios.delete('http://localhost:3000/api/user/deletepost', {
-                data: { id } // Send id in the body of the DELETE request
+                data: { id }
             });
 
             if (data.success) {
@@ -42,7 +31,6 @@ export default function MyPost() {
             console.error("Error deleting post:", error);
         }
     };
-
 
     return (
         <div>
@@ -77,12 +65,12 @@ export default function MyPost() {
                                 />
                                 <h1 className="text-2xl">{food.foodName}</h1>
                             </div>
-                            <p className="ml-[40px] text-sm">{formatDate(food.createdAt)}</p>
+                            <p className="ml-[40px] text-sm">{new Date(food.createdAt).toLocaleDateString()}</p>
                             <br />
                             <p>{food.description}</p>
                             <br />
                             <img
-                                src="/food1.jpeg"
+                                src={`http://localhost:3000/sellimages/${food.image}`}
                                 alt=""
                                 className="w-[250px] h-[190px] ml-[45px]"
                             />
