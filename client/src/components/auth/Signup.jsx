@@ -15,6 +15,10 @@ export default function SignUpForm() {
         phone: "",
         role: "user"
     });
+    const [imgs, setImgs] = useState(null)
+    const profileimg = (e) => {
+        setImgs(e.target.files[0])
+    }
     const { setIsloggedin, getuserdata, userdata } = useContext(Appcontent);
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -61,22 +65,28 @@ export default function SignUpForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone) {
+            setError("All fields are required!");
+            return;
+        }
+
         try {
-            if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone) {
-                setError("All fields are required!");
-                return;
-            }
             setError("");
-            setFormData({
-                name: "",
-                email: "",
-                password: "",
-                address: "",
-                phone: "",
-                role: "user"
-            });
+            const form = new FormData();
+            form.append("name", formData.name)
+            form.append("email", formData.email)
+            form.append("password", formData.password)
+            form.append("address", formData.address)
+            form.append("phone", formData.phone)
+            form.append("role", formData.role)
+            form.append("avatar", imgs)
             axios.defaults.withCredentials = true;
-            const { data } = await axios.post("http://localhost:3000/api/auth/register", formData);
+            const { data } = await axios.post("http://localhost:3000/api/auth/register", form, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
             if (data.success) {
                 setIsloggedin(true);
                 await getuserdata();
@@ -128,28 +138,32 @@ export default function SignUpForm() {
                         <div className="flex space-x-4">
                             <div className="w-1/2">
                                 <label className="block text-gray-600 font-semibold">Full Name</label>
-                                <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off"/>
+                                <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off" />
                             </div>
                             <div className="w-1/2">
                                 <label className="block text-gray-600 font-semibold">Email</label>
-                                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off"/>
+                                <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off" />
                             </div>
                         </div>
 
                         <div className="flex space-x-4">
                             <div className="w-1/2">
                                 <label className="block text-gray-600 font-semibold">Password</label>
-                                <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off"/>
+                                <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off" />
                             </div>
                             <div className="w-1/2">
                                 <label className="block text-gray-600 font-semibold">Phone Number</label>
-                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off"/>
+                                <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off" />
                             </div>
                         </div>
                         <div>
                             <label className="block text-gray-600 font-semibold">Address</label>
-                            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off"/>
+                            <input type="text" name="address" value={formData.address} onChange={handleChange} className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" autoComplete="off" />
                         </div>
+                        <br />
+                        <div>
+                            <input type="file" name="avatar" id="" onChange={profileimg} />
+                        </div> <br />
                         <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition">Sign Up</button>
                         <p className="text-center">Already have an account? <Link to="/login" className="text-blue-600">Login</Link></p>
                     </motion.form>

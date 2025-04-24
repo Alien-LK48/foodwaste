@@ -16,6 +16,7 @@ export const register = async (req, res) => {
         }
         const hashedpassword = await bcrypt.hash(password, 10);
         let user;
+        const imagePath = req.file?.filename;
         if (role === "user") {
             user = new usermodel({
                 name,
@@ -27,7 +28,8 @@ export const register = async (req, res) => {
                 isAdmin: false,
                 isNgo: false,
                 isDonor: false,
-                roletype: `user`
+                roletype: `user`,
+                image: imagePath,
             });
         } else if (role === "ngo") {
             user = new usermodel({

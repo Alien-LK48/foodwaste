@@ -136,7 +136,7 @@ export const receivefood = async (req, res) => {
 
 export const sellfood = async (req, res) => {
     try {
-        const { userid, foodName, description, location, quantity, price, expiryDate, demoimg } = req.body
+        const { userid, foodName, description, location, quantity, price, expiryDate } = req.body
         if (!userid) {
             return res.status(401).json({ success: false, message: "Unauthorized" });
         }

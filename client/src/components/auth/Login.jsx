@@ -24,7 +24,8 @@ export default function Login() {
             }
             setError("");
             axios.defaults.withCredentials = true
-            const { data } = await axios.post('http://localhost:3000/api/auth/login', { email: formData.email, password: formData.password })
+            const { data } = await axios.post('http://localhost:3000/api/auth/login',
+                { email: formData.email, password: formData.password })
             if (data.success) {
                 setIsloggedin(true)
                 await getuserdata()
@@ -35,7 +36,6 @@ export default function Login() {
         } catch (error) {
             setError(error.message)
         }
-
     };
     useEffect(() => {
         if (userdata?.user) {
@@ -49,8 +49,7 @@ export default function Login() {
                 navigate('/');
             }
         }
-    }, [userdata, navigate]); // Runs when userdata updates
-
+    }, [userdata, navigate]);
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}

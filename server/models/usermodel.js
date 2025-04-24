@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
     teamMember: { type: String, default: "" },
     ngoRegNum: { type: String, default: "" },
     area: { type: String, default: "" },
+    image: { type: String },
     donatedFoods: [{ type: mongoose.Schema.Types.ObjectId, ref: "foods" }],
     saleFoods: [{ type: mongoose.Schema.Types.ObjectId, ref: "sellfoods" }],
     createdAt: { type: Date, default: Date.now },

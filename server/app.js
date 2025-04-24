@@ -18,6 +18,7 @@ app.use(cors({
 app.use(cookieparser())
 app.use(express.json())
 app.use('/sellimages', express.static('public/img/sell_food'));
+app.use("/profilepics", express.static("public/img/profile_img"));
 app.use(express.urlencoded({ extended: true }))
 connectToDb()
 

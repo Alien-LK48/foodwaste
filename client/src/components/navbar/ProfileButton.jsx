@@ -35,9 +35,14 @@ export default function ProfileButton() {
     return (
         <>
             <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="btn m-1 w-[50px] h-[50px] rounded-full bg-[black]">
-                    <FaUser className='w-[50px] h-[50px] text-4xl text-white' />
+                <div tabIndex={0} className="relative btn m-1 w-[50px] h-[50px] rounded-full flex items-center justify-center">
+                    <img
+                        src={`http://localhost:3000/profilepics/${userdata?.user?.image}`}
+                        alt="!"
+                        className="absolute w-[50px] h-[50px] rounded-full object-cover"
+                    />
                 </div>
+
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box border-2 border-black z-[1] w-[110px] p-2 shadow">
                     <li className='mb-[5px]'>
                         <label htmlFor="my_modal_6" className="flex items-center bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -75,7 +80,7 @@ export default function ProfileButton() {
                             Edit Profile
                         </button>
                         <br /> <br />
-                        {userdata?.user?.isUser && (<button onClick={()=>{navigate('/mypost')}} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
+                        {userdata?.user?.isUser && (<button onClick={() => { navigate('/mypost') }} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
                             my post
                         </button>)}
                         <div className="modal-action">
