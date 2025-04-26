@@ -27,6 +27,7 @@ import MyPost from './pages/sell/MyPost';
 import EditSell from './pages/sell/EditSell';
 import 'react-toastify/dist/ReactToastify.css';
 import Postfood from './pages/postfood/Postfood';
+import Chat from './components/chat/Chat';
 
 function App() {
   const { isloggedin } = useContext(Appcontent)
@@ -62,6 +63,7 @@ function App() {
         <Route path='/mypost' element={<MyPost />} />
         <Route path='/allposts' element={<Postfood />} />
         <Route path='/updatepost/:id' element={<EditSell />} />
+        <Route path='/chat' element={<Chat />} />
       </Routes>
     </div>
   );

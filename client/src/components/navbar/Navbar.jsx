@@ -8,12 +8,12 @@ export default function NavBar() {
     return (
         <div className='p-4 bg-[#DD8E31] text-black shadow-2xl'>
             {isloggedin && !userdata?.user?.isVarified && !userdata?.user?.isNgo && (
-                <p className='text-center text-red-500 font-semibold mb-4'>
+                <p className='text-center text-white font-semibold mb-4'>
                     Account is not verified.  <Link to='/otp'>Verify now.</Link> <hr />
                 </p>
             )}
             {isloggedin && userdata?.user?.isNgo && !userdata?.user?.isVarified && (
-                <p className='text-center text-red-500 font-semibold mb-4'>
+                <p className='text-center text-white font-semibold mb-4'>
                     Your account is under verification . <Link to='/msg'>see more</Link><hr />
                 </p>
             )}
