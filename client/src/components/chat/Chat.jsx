@@ -45,6 +45,7 @@ export default function Chat() {
             sendto,
             from: userdata.user.name
         })
+        setShowmsg((prev) => [...prev, { msg, from: "You" }])
         setMsg(``)
     }
 
@@ -65,6 +66,7 @@ export default function Chat() {
                     className='border-2 border-[red]'
                     value={sendto}
                     onChange={(e) => setSendto(e.target.value)}
+                    required
                 /> <br /><br />
                 <button type='submit'>Send</button>
             </form>

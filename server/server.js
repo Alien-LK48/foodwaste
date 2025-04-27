@@ -34,7 +34,6 @@ io.on("connection", (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`User ${userId} disconnected`)
-        // Clean up the mapping
         if (userId) {
             delete userSocketMap[userId]
         }
