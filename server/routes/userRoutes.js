@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middlewares/userAuth.js';
-import { getuserdata, donateFood, alldonetedfoods, deleteFood, receivefood, sellfood, getsellfoodsbyid, editmysell, deletepost, foodsellpost, postComment, getcomments, getcommentsbyid } from '../controllers/userController.js';
+import { getuserdata, donateFood, alldonetedfoods, deleteFood, receivefood, sellfood, getsellfoodsbyid, editmysell, deletepost, foodsellpost, postComment, getcomments, getcommentsbyid, getchats, getChatUsers } from '../controllers/userController.js';
 import isbanned from '../middlewares/isbanned.js';
 import { uploadFood } from '../middlewares/uploadfile.js';
 
@@ -20,3 +20,5 @@ userRouter.get('/foodsellpost', foodsellpost);
 userRouter.post('/postacomment', postComment);
 userRouter.get('/getcomments', getcomments);
 userRouter.get('/getcommentsbyid/:id', getcommentsbyid);
+userRouter.get('/getMessages/:userId', getchats);
+userRouter.get('/getChatUsers/:userId', getChatUsers);

@@ -1,7 +1,7 @@
 import app from './app.js'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
-
+import Chatmodel from './models/chatmodel.js'
 const server = createServer(app)
 const io = new Server(server, {
     cors: {
@@ -19,17 +19,22 @@ io.on("connection", (socket) => {
         userSocketMap[userId] = socket.id
     }
 
-    console.log(`User ${userId} connected with socket id ${socket.id}`)
+    socket.on('message', async ({ sendto, msg, from, name }) => {
+        try {
+            await Chatmodel.create({
+                from,
+                to: sendto,
+                msg
+            })
+            const targetSocketId = userSocketMap[sendto]
+            if (targetSocketId) {
+                io.to(targetSocketId).emit('receivedMsg', { msg, from, name })
+            }
 
-    socket.emit('welcome', `Welcome to server, ${socket.id}`)
-
-    socket.broadcast.emit(`'welcome', ${socket.id} has joined the server)`)
-
-    socket.on('message', ({ sendto, msg, from }) => {
-        const targetSocketId = userSocketMap[sendto]
-        if (targetSocketId) {
-            io.to(targetSocketId).emit('receivedMsg', { msg, from })
+        } catch (error) {
+            console.error("Error saving message:", error);
         }
+
     })
 
     socket.on('disconnect', () => {

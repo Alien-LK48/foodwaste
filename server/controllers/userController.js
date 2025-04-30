@@ -2,6 +2,7 @@ import FoodModel from "../models/foodmodel.js";
 import SellFoodModel from "../models/sellfoodmodel.js";
 import usermodel from "../models/usermodel.js";
 import CommentModel from "../models/commentmodel.js";
+import Chatmodel from "../models/chatmodel.js";
 export const getuserdata = async (req, res) => {
     try {
         const { userid } = req.body
@@ -294,3 +295,40 @@ export const getcommentsbyid = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
 }
+
+export const getchats = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const messages = await Chatmodel.find({
+            $or: [{ from: userId }, { to: userId }]
+        }).sort({ timestamp: 1 });
+
+        res.json({ success: true, messages });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+    }
+}
+
+export const getChatUsers = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const chats = await Chatmodel.find({
+            $or: [{ from: userId }, { to: userId }]
+        });
+
+        const userIdsSet = new Set();
+
+        chats.forEach(chat => {
+            if (chat.from.toString() !== userId) userIdsSet.add(chat.from.toString());
+            if (chat.to.toString() !== userId) userIdsSet.add(chat.to.toString());
+        });
+
+        res.json({ success: true, users: Array.from(userIdsSet) });
+    } catch (error) {
+        console.error("Error getting chat users:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
