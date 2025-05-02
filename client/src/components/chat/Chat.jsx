@@ -43,7 +43,6 @@ export default function Chat() {
     const sendid = async (e, receiverId) => {
         e.preventDefault();
         setSendto(receiverId);
-    
         try {
             const res = await axios.get(`http://localhost:3000/api/user/getMessages/${userdata.user._id}`);
             if (res.data.success) {
@@ -61,7 +60,7 @@ export default function Chat() {
             console.error("Failed to load chat with user", err);
         }
     };
-    
+
     useEffect(() => {
         if (!socket) return
 
@@ -80,9 +79,9 @@ export default function Chat() {
                 setShowmsg((prev) => [...prev, data])
             }
         });
-        
+
         if (userdata?.user?._id) {
-           
+
             fetchChatUsers();
         }
         return () => {
@@ -91,7 +90,6 @@ export default function Chat() {
     }, [socket, userdata.user?._id])
     return (
         <div>
-            <p> my id : {userdata.user?._id}</p> <br />
             <div className="border p-2 w-[250px]">
                 <h2>Chatted User IDs:</h2>
                 {chatUsers.map((id) => (
@@ -118,7 +116,7 @@ export default function Chat() {
             </form>
             <div className='flex flex-col overflow-y-auto w-[250px] h-[250px]'>
                 {showmsg.map((item, i) => (
-                    <p key={i}> {item.msg}</p>
+                    <p key={i}> --- {item.msg}</p>
                 ))}
             </div>
 
