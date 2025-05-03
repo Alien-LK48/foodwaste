@@ -21,12 +21,13 @@ export default function Postfood() {
     const [sendto, setSendto] = useState(``)
     const [id, setId] = useState(``)
     const [showmsg, setShowmsg] = useState([])
-
+    const [sendername, setSendername] = useState(``)
     const fetchFoodPosts = async () => {
         try {
             const response = await axios.get("http://localhost:3000/api/user/foodsellpost");
             if (response.data.success) {
                 setFoods(response.data.foods);
+                
             } else {
                 setError(response.data.message || "Failed to fetch food posts");
             }
@@ -92,9 +93,10 @@ export default function Postfood() {
             console.error("Error posting comment:", error);
         }
     };
-    const getid = (e, id) => {
+    const getid = (e, id, name) => {
         e.preventDefault()
         setSendto(id)
+        setSendername(name)
     }
     const submit = (e) => {
         e.preventDefault()
@@ -109,38 +111,32 @@ export default function Postfood() {
         setMsg(``)
     }
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">All Food Posts</h2>
-            <p>{userdata.user?._id}</p>
+        <div className="p-6 bg-gray-100">
+            <h2 className=" text-3xl font-bold text-center text-gray-800 mb-8">All Food Posts</h2>
 
-
-            <div className="flex flex-row">
-                <div>
-                    <form onSubmit={submit}>
+            <div className="grid grid-cols-2 md:grid-cols-2">
+                {/* Chat Area */}
+                <div className="bg-white shadow-md rounded-lg p-6 space-y-4 w-[380px] h-[250px]">
+                    <h3 className="text-xl font-semibold text-gray-800">Chat</h3>
+                    <form onSubmit={submit} className="space-y-4">
                         <input
                             type="text"
-                            placeholder='Message...'
-                            className='border-2 border-[red]'
+                            placeholder="Message..."
+                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-400"
                             value={msg}
                             onChange={(e) => setMsg(e.target.value)}
-                        /> <br /><br />
-                        <input
-                            type="text"
-                            placeholder='Send to (user id)...'
-                            className='border-2 border-[red]'
-                            value={sendto}
-                            onChange={(e) => setSendto(e.target.value)}
-                            required
-                        /> <br /><br />
-                        <button type='submit'>Send</button>
-                    </form> <br /><br />
-                    <div>
-                        {showmsg.map((item, i) => (
-                            <p key={i}><b>{item.name}</b>: {item.msg}</p>
-                        ))}
-                    </div>
+                        />
+                        <h1>sending to : {sendername}</h1>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                        >
+                            Send
+                        </button>
+                    </form>
                 </div>
-                <div>
+                {/* Food Post Area */}
+                <div className=" space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
                     {loading ? (
                         <p className="text-center text-lg font-semibold text-gray-700">Loading...</p>
                     ) : error ? (
@@ -148,80 +144,101 @@ export default function Postfood() {
                     ) : foods.length === 0 ? (
                         <p className="text-center text-gray-600">No food posts available</p>
                     ) : (
-                        <div className="flex flex-col w-[400px] h-[470px] overflow-y-auto ml-[450px] gap-6">
-                            {foods.map((food) => (
-                                <div key={food._id} className="relative border p-6 rounded-lg shadow-lg bg-white hover:shadow-xl transition-shadow">
-                                    <section>{food.soldby.map((user) => {
-                                        return <div key={user._id}>
-                                            <div className="flex flex-row gap-[15px]">
-                                                <img src={`http://localhost:3000/profilepics/${user.image}`}
-                                                    alt="?"
-                                                    className="w-[50px] h-[50px] rounded-full border-red-600 border-2"
-                                                    onClick={(e) => getid(e, user._id)} />
-                                                <p className="mt-[5px]">{user.name}</p>
-                                            </div>
+                        foods.map((food) => (
+                            <div
+                                key={food._id}
+                                className="relative border bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                            >
+                                {/* Seller Info */}
+                                {food.soldby.map((user) => (
+                                    <div key={user._id} className="relative flex items-center gap-3 mb-2">
+                                        <img
+                                            src={`http://localhost:3000/profilepics/${user.image}`}
+                                            alt={user.name}
+                                            className="w-12 h-12 rounded-full border-2 border-blue-500 cursor-pointer"
+                                            onClick={(e) => getid(e, user._id, user.name)}
+                                        />
+                                        <div>
+                                            <p className="font-semibold">{user.name}</p>
+                                            <p className="text-sm text-gray-500">{new Date(food.createdAt).toDateString()}</p>
                                         </div>
-                                    })}</section>
-                                    <p className="absolute top-[55px] text-sm left-[90px]">{new Date(food.createdAt).toDateString()}</p> <br />
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{food.foodName}</h3>
-                                    <p className="text-sm text-gray-600 mb-2">{food.description}</p>
-                                    <p><strong>Price:</strong> ${food.price}</p>
-                                    <p><strong>Location:</strong> {food.location}</p>
-                                    <p><strong>Quantity:</strong> {food.quantity}</p>
-                                    <p><strong>Expiry Date:</strong> {new Date(food.expiryDate).toDateString()}</p>
+                                        <hr className="border-[1px] border-black w-full absolute top-[55px]"/>
+                                    </div>
+                                ))}
 
-                                    {/* Comment Button */}
-                                    <label htmlFor={`comments-${food._id}`} onClick={() => commentsbyid(food._id)} className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
-                                        <FaCommentDots /> Comment
-                                    </label>
-                                    <input type="checkbox" id={`comments-${food._id}`} className="modal-toggle" />
+                                {/* Food Info */}
+                                <h3 className="text-xl font-semibold text-gray-900 mt-[20px]">{food.foodName}</h3>
+                                <p className="text-gray-700 mb-2">{food.description}</p>
+                                <ul className="relative text-sm text-gray-600 space-y-1 mb-4">
+                                    <li><strong>Price:</strong> ${food.price}</li>
+                                    <li><strong>Location:</strong> {food.location}</li>
+                                    <li><strong>Quantity:</strong> {food.quantity}</li>
+                                    <li><strong>Expiry Date:</strong> {new Date(food.expiryDate).toDateString()}</li>
+                                    <img src={`http://localhost:3000/sellimages/${food.image}`} alt="" className="absolute w-[230px] h-[210px] top-[-60px] left-[290px]"/>
+                                </ul>
+                                {/* Comment Button */}
+                                <label
+                                    htmlFor={`comments-${food._id}`}
+                                    onClick={() => commentsbyid(food._id)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700 transition"
+                                >
+                                    <FaCommentDots /> Comment
+                                </label>
 
-                                    {/* Comment Modal */}
-                                    <div className="modal">
-                                        <div className="modal-box">
-                                            <h3 className="text-lg font-bold">Comment on {food.foodName}</h3>
-                                            {allcommentsbyid.length === 0 ? (
-                                                <p className="text-gray-600 text-center">No comments yet</p>
-                                            ) : (
-                                                <div className="space-y-3 mt-2">
-                                                    {allcommentsbyid.map((com) => (
-                                                        <div key={com._id} className="p-3 border rounded-lg shadow-sm bg-gray-100">
-                                                            <p className="text-sm font-semibold text-gray-800">{com.userComment.email}</p>
-                                                            <p className="text-gray-700">{com.comment}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            <textarea
-                                                className="w-full border rounded p-2 mt-2 resize-none"
-                                                placeholder="Write your comment..."
-                                                onChange={(e) => changecomment(e, food._id)}
-                                                value={comments[food._id] || ""}
-                                                name="comments"
-                                            ></textarea>
-                                            <div className="modal-action flex justify-between">
-                                                <button
-                                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-                                                    onClick={(e) => submitcomment(e, food._id)}
-                                                >
-                                                    Post Comment
-                                                </button>
-                                                <label htmlFor={`comments-${food._id}`} className="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-pointer hover:bg-gray-500 transition">Close</label>
+                                {/* Hidden Checkbox for Modal Toggle */}
+                                <input type="checkbox" id={`comments-${food._id}`} className="modal-toggle hidden" />
+
+                                {/* Modal */}
+                                <div className="modal w-full h-full flex items-center justify-center">
+                                    <div className="modal-box w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+                                        {food.soldby.map((user) => {
+                                            return <strong> Comment on  {user.name}'s post</strong>
+                                        })}
+                                        <h3 className="text-xl font-bold mb-4"></h3>
+                                        {allcommentsbyid.length === 0 ? (
+                                            <p className="text-gray-600 text-center">No comments yet</p>
+                                        ) : (
+                                            <div className="space-y-3 mb-4 max-h-40 overflow-y-auto">
+                                                {allcommentsbyid.map((com) => (
+                                                    <div key={com._id} className="p-3 border rounded-md bg-gray-100">
+                                                        <p className="text-sm font-semibold text-gray-800">{com.userComment.email}</p>
+                                                        <p className="text-gray-700">{com.comment}</p>
+                                                    </div>
+                                                ))}
                                             </div>
+                                        )}
+                                        <textarea
+                                            className="w-full border rounded-md p-2 resize-none mb-4"
+                                            placeholder="Write your comment..."
+                                            onChange={(e) => changecomment(e, food._id)}
+                                            value={comments[food._id] || ""}
+                                            name="comments"
+                                        />
+                                        <div className="flex justify-between">
+                                            <button
+                                                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                                                onClick={(e) => submitcomment(e, food._id)}
+                                            >
+                                                Post Comment
+                                            </button>
+                                            <label
+                                                htmlFor={`comments-${food._id}`}
+                                                className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-pointer hover:bg-gray-500"
+                                            >
+                                                Close
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))
                     )}
                 </div>
+                {/* {Modal / comment Area} */}
+
+
             </div>
-
-
-
-
-
-
         </div>
     );
+
 }

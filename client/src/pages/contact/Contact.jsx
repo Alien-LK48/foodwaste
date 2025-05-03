@@ -25,7 +25,7 @@ export default function Contact() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex justify-center items-cente p-4"
+      className="flex justify-center items-cente p-4 border-x-[20px] border-[#3B42D2] border-t-[20px] border-double"
     >
       <motion.form
         onSubmit={handleSubmit}
@@ -87,15 +87,15 @@ export default function Contact() {
           </div>
         </div>
         <div className="mt-6 text-center">
-        <button 
-          type="submit" 
-          className="w-full mt-6 bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
-        >
-          Submit
-        </button>
+          <button
+            type="submit"
+            className="w-full mt-6 bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
+          >
+            Submit
+          </button>
         </div>
       </motion.form>
-    </motion.div>
+    </motion.div> <br />
       <Footer />
     </>
 
