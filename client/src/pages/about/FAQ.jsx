@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
+import Header from '../../components/heading/Header';
 
 export default function FAQ() {
     const [openIndex, setOpenIndex] = useState(null);
@@ -32,9 +33,9 @@ export default function FAQ() {
     };
 
     return (
-        <section className="py-12 px-6 bg-gray-50">
+        <section className="py-12 px-6 bg-gray-50 border-x-[20px] border-[#3B42D2] mt-[-25px] border-double">
             <div className="max-w-4xl mx-auto text-center">
-                <h2 className="text-3xl font-bold text-gray-800">Frequently Asked Questions</h2>
+                <Header childern={`Frequently Asked Questions`}/>
                 <div className="mt-8 space-y-6">
                     {faqs.map((faq, index) => (
                         <div key={index} className="faq-item bg-white p-6 rounded-lg shadow-md">

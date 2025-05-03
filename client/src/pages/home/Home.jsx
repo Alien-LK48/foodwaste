@@ -19,6 +19,5 @@ export default function Home() {
       <Contact /><br />
       <Footer />
     </>
-
   )
 }

@@ -6,11 +6,11 @@ export default function Introduction() {
             className="p-[20px] bg-cover bg-center h-[480px] w-full flex flex-col justify-center items-center text-white text-center"
             style={{ backgroundImage: 'url(/about.png)' }}
         >
-            <h1 className="text-6xl font-bold text-black animate-heading">
+            <h1 className="text-6xl font-bold text-black animate-heading font-robotoCondensed pt-[25px]">
                 Our Mission
             </h1>
             <br />
-            <p className="mt-4 text-lg text-black">
+            <p className=" text-lg text-black font-parkinsans">
                 At our core, we are committed to reducing food waste, alleviating hunger, and fostering sustainability. Every year, billions of pounds of edible food are discarded while millions of people go without. Our mission is to change that. We rescue surplus food from farms, grocery stores, restaurants, manufacturers, and even from individual households—preventing it from ending up in landfills and causing unnecessary greenhouse gas emissions. This food is then repurposed and redistributed to individuals and families in need, offering them access to fresh, healthy, and nutritious meals.
                 <br />
 
@@ -19,7 +19,7 @@ export default function Introduction() {
             </p>
 
             <br />
-            <button className="mt-6 bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg text-white font-semibold transition-all">
+            <button className=" bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg text-white font-semibold transition-all">
                 Join With Us
             </button>
         </div>

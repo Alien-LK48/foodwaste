@@ -1,19 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
+import Header from '../../components/heading/Header'
 export default function Contact() {
     return (
-        <>
-            <div className="bg-blue-600 text-white p-8 text-center rounded-lg">
-                <h2 className="text-3xl font-bold">Contact Us</h2>
+        <motion.div
+            whileInView={{ y: [200, 0] }}
+            transition={{ delay: 0.25, duration:1 }}
+            className='border-x-[20px] mt-[-25px] border-[#3B42D2] border-double'>
+            <div className="bg-blue-600 text-white p-8 text-center rounded-lg w-[80%] ml-[130px]">
+                <Header childern={`Contact Us`} />
                 <p className="mt-2">We’d love to hear from you! Reach out for any questions or support.</p>
-                <motion.button 
-                className="mt-4 px-6 py-2 bg-white text-blue-600 font-semibold rounded-lg">
+                <motion.button
+                    className="mt-4 px-6 py-2 bg-white text-blue-600 font-semibold rounded-lg">
                     <Link to='/contact'>Get in Touch </Link>
                 </motion.button>
-            </div>
-
-
-        </>
+            </div> <br />
+        </motion.div>
     )
 }

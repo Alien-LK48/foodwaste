@@ -1,9 +1,10 @@
 import React from 'react'
 import { motion, delay } from 'framer-motion'
+import Header from '../../components/heading/Header'
 export default function Steps() {
     return (
-        <>
-            <h2 className="text-4xl font-bold text-center">Our Approach to Tackling Food Waste</h2> <br />
+        <div className='border-x-[20px] mt-[-25px] border-[#3B42D2] border-double'>
+           <Header childern={`Our Approach to Tackling Food Waste`}/>
             <div className='flex flex-wrap gap-[20px] justify-center items-center align-middle'>
                 <div className="card card-compact bg-base-100 w-96 shadow-xl">
                     <motion.figure
@@ -60,8 +61,8 @@ export default function Steps() {
                     </div>
                 </div>
 
-            </div>
+            </div> <br />
 
-        </>
+        </div>
     )
 }

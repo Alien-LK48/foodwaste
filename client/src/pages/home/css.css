@@ -21,54 +21,9 @@
       transform: rotate(360deg);
     }
   }
-  
-  .ring-container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    margin-top: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: rotateRing 10s infinite linear;
-  }
-  
-  .ring-container img {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-  }
-  
-  .ring-container img:nth-child(1) {
-    transform: rotate(0deg) translateY(-140px) rotate(0deg);
-  }
-  
-  .ring-container img:nth-child(2) {
-    transform: rotate(45deg) translateY(-140px) rotate(-45deg);
-  }
-  
-  .ring-container img:nth-child(3) {
-    transform: rotate(90deg) translateY(-140px) rotate(-90deg);
-  }
-  
-  .ring-container img:nth-child(4) {
-    transform: rotate(135deg) translateY(-140px) rotate(-135deg);
-  }
-  
-  .ring-container img:nth-child(5) {
-    transform: rotate(180deg) translateY(-140px) rotate(-180deg);
-  }
-  
-  .ring-container img:nth-child(6) {
-    transform: rotate(225deg) translateY(-140px) rotate(-225deg);
-  }
-  
-  .ring-container img:nth-child(7) {
-    transform: rotate(270deg) translateY(-140px) rotate(-270deg);
-  }
-  
-  .ring-container img:nth-child(8) {
-    transform: rotate(315deg) translateY(-140px) rotate(-315deg);
+  .glow-border {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7),
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(0, 255, 0, 0.4); /* green glow */
   }
   

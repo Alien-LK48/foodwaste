@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState, useContext } from 'react'
+import React, { useEffect, useMemo, useState, useContext, useRef } from 'react'
 import { io } from 'socket.io-client'
 import { Appcontent } from '../contextapi/Appcontext'
 import axios from 'axios'
+
 export default function Chat() {
     const { userdata } = useContext(Appcontent)
 
@@ -17,7 +18,7 @@ export default function Chat() {
     const [id, setId] = useState(``)
     const [showmsg, setShowmsg] = useState([])
     const [chatUsers, setChatUsers] = useState([]);
-
+    const msgEndRef = useRef(null)
     const submit = (e) => {
         e.preventDefault()
         if (!socket) return
@@ -30,6 +31,7 @@ export default function Chat() {
         setShowmsg((prev) => [...prev, { msg, name: "You" }])
         setMsg(``)
     }
+
     const fetchChatUsers = async () => {
         try {
             const res = await axios.get(`http://localhost:3000/api/user/getChatUsers/${userdata.user._id}`);
@@ -40,6 +42,7 @@ export default function Chat() {
             console.error("Error fetching chat users", err);
         }
     };
+
     const sendid = async (e, receiverId) => {
         e.preventDefault();
         setSendto(receiverId);
@@ -68,9 +71,7 @@ export default function Chat() {
             setId(socket.id)
             console.log('connected', socket.id)
         })
-        socket.on('welcome', (s) => {
-            console.log(s)
-        })
+
         socket.on('receivedMsg', (data) => {
             if (
                 (data.from === userdata.user._id && data.sendto === sendto) ||
@@ -81,47 +82,81 @@ export default function Chat() {
         });
 
         if (userdata?.user?._id) {
-
             fetchChatUsers();
         }
-        return () => {
-            socket.disconnect()
-        }
-    }, [socket, userdata.user?._id])
+        // return () => {
+        //     socket.disconnect()
+        // }
+    }, [socket, userdata.user?._id, sendto])
+    useEffect(() => {
+        msgEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [showmsg])
+
     return (
-        <div>
-            <div className="border p-2 w-[250px]">
-                <h2>Chatted User IDs:</h2>
-                {chatUsers.map((id) => (
-                    <p key={id} onClick={(e) => sendid(e, id)}>{id}</p>
-                ))}
-            </div> <br />
-            <form onSubmit={submit}>
-                <input
-                    type="text"
-                    placeholder='Message...'
-                    className='border-2 border-[red]'
-                    value={msg}
-                    onChange={(e) => setMsg(e.target.value)}
-                /> <br /><br />
-                <input
-                    type="text"
-                    placeholder='Send to (user id)...'
-                    className='border-2 border-[red]'
-                    value={sendto}
-                    onChange={(e) => setSendto(e.target.value)}
-                    required
-                /> <br /><br />
-                <button type='submit'>Send</button>
-            </form>
-            <div className='flex flex-col overflow-y-auto w-[250px] h-[250px]'>
-                {showmsg.map((item, i) => (
-                    <p key={i}> --- {item.msg}</p>
+        <div className="flex h-[510px] w-full font-sans">
+            {/* Sidebar with chat users */}
+            <div className="w-1/4 border-r border-gray-300 p-4 overflow-y-auto">
+                <h2 className="text-xl font-semibold mb-4">Chats</h2>
+                {chatUsers.map((user) => (
+                    <div
+                        key={user._id}
+                        onClick={(e) => sendid(e, user._id)}
+                        className="mb-4 cursor-pointer p-2 rounded-md hover:bg-gray-100 transition"
+                    >
+                        <p className="font-medium">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                        <p className="text-sm text-gray-400">{user.phone}</p>
+                    </div>
                 ))}
             </div>
 
+            {/* Chat Window */}
+            <div className="w-3/4 flex flex-col">
+                {/* Messages */}
+                <div className="flex-1 p-6 overflow-y-auto bg-gray-100">
+                    {showmsg.map((message, i) => (
+                        <div
+                            key={i}
+                            className={`mb-2 flex ${message.name === "You" ? "justify-end" : "justify-start"}`}
+                        >
+                            <div
+                                className={`px-4 py-2 rounded-lg max-w-xs ${message.name === "You"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-white text-black border"
+                                    }`}
+                            >
+                             {message.msg}
+                            </div>
+                        </div>
+                    ))}
+                    <div ref={msgEndRef}></div>
+                </div>
 
-
+                {/* Input Box */}
+                <form onSubmit={submit} className="p-4 border-t flex gap-2 bg-white">
+                    <input
+                        type="text"
+                        placeholder="Message..."
+                        className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={msg}
+                        onChange={(e) => setMsg(e.target.value)}
+                    />
+                    {/* <input
+                        type="text"
+                        placeholder="User ID"
+                        className="w-[150px] border rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={sendto}
+                        onChange={(e) => setSendto(e.target.value)}
+                        required
+                    /> */}
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700"
+                    >
+                        Send
+                    </button>
+                </form>
+            </div>
         </div>
-    )
+    );
 }

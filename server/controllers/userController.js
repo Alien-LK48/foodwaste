@@ -326,7 +326,15 @@ export const getChatUsers = async (req, res) => {
             if (chat.to.toString() !== userId) userIdsSet.add(chat.to.toString());
         });
 
-        res.json({ success: true, users: Array.from(userIdsSet) });
+        const userIds = Array.from(userIdsSet);
+
+        // Fetch user details by IDs
+        const users = await usermodel.find(
+            { _id: { $in: userIds } },
+            'name email image _id phone' // Only select these fields (adjust if needed)
+        );
+
+        res.json({ success: true, users });
     } catch (error) {
         console.error("Error getting chat users:", error);
         res.status(500).json({ success: false, message: "Server error" });

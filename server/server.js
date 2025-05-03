@@ -37,12 +37,12 @@ io.on("connection", (socket) => {
 
     })
 
-    socket.on('disconnect', () => {
-        console.log(`User ${userId} disconnected`)
-        if (userId) {
-            delete userSocketMap[userId]
-        }
-    })
+    // socket.on('disconnect', () => {
+    //     console.log(`User ${userId} disconnected`)
+    //     if (userId) {
+    //         delete userSocketMap[userId]
+    //     }
+    // })
 })
 
 server.listen(process.env.PORT, () => {
